@@ -8,6 +8,7 @@ package view;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JList;
 
 /**
  *
@@ -37,10 +38,11 @@ public class MainGUI extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         jPanel2 = new javax.swing.JPanel();
         buttonCreateTask = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         buttonPtBr = new javax.swing.JButton();
         buttonEn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        list = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,25 +68,6 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonCreateTask, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 184, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
-        );
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jPanel2.add(jPanel1, gridBagConstraints);
-
         buttonPtBr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/language/pt-br.png"))); // NOI18N
         buttonPtBr.setText(bundle.getString("MainGUI.buttonPtBr.text")); // NOI18N
         buttonPtBr.addActionListener(new java.awt.event.ActionListener() {
@@ -100,8 +83,19 @@ public class MainGUI extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         jPanel2.add(jPanel3, gridBagConstraints);
+
+        list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(list);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jScrollPane1, gridBagConstraints);
 
         jSplitPane1.setLeftComponent(jPanel2);
 
@@ -169,15 +163,20 @@ public class MainGUI extends javax.swing.JFrame {
         return bundle;
     }
 
+    public JList getList() {
+        return list;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCreateTask;
     private javax.swing.JButton buttonEn;
     private javax.swing.JButton buttonPtBr;
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JList list;
     private java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }

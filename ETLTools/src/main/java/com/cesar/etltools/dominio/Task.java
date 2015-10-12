@@ -66,4 +66,9 @@ public class Task {
         this.unit = unit;
     }
 
+    @Override
+    public String toString() {
+        return this.description;
+    }
+
 }

@@ -21,6 +21,10 @@ public class TaskDao {
         return (List<Task>) session.createQuery("from Task t where t.description = :description")
                 .setParameter("description", description).list();
     }
+    
+    public List<Task> list() {
+        return (List<Task>) session.createQuery("from Task t").list();
+    }
 
     public void salvar(Task task) {
         session.save(task);

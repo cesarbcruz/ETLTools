@@ -26,8 +26,10 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         initComponents();
         buttonSave.setBackground(new Color(51, 153, 255));
         buttonSave.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCancel.setBackground(new Color(255, 174, 174));
-        buttonCancel.setForeground(new java.awt.Color(255, 255, 255));
+        buttonCancel.setBackground(new Color(255,215,0));
+        buttonCancel.setForeground(new java.awt.Color(0, 0, 0));
+        buttonDelete.setBackground(new Color(255,99,71));
+        buttonDelete.setForeground(new java.awt.Color(255, 255, 255));
     }
 
     /**
@@ -51,6 +53,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         buttonSave = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
+        buttonDelete = new javax.swing.JButton();
 
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -139,6 +142,11 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         buttonCancel.setText(bundle.getString("CreateTaskGUI.buttonCancel.text")); // NOI18N
         jPanel1.add(buttonCancel);
 
+        buttonDelete.setBackground(javax.swing.UIManager.getDefaults().getColor("OptionPane.errorDialog.titlePane.shadow"));
+        buttonDelete.setForeground(new java.awt.Color(255, 255, 255));
+        buttonDelete.setText(bundle.getString("CreateTaskGUI.buttonDelete.text")); // NOI18N
+        jPanel1.add(buttonDelete);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -176,9 +184,14 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         return bundle;
     }
 
+    public JButton getButtonDelete() {
+        return buttonDelete;
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonDelete;
     private javax.swing.JButton buttonSave;
     private javax.swing.JTextField description;
     private javax.swing.JSpinner initialDelay;
@@ -189,6 +202,6 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelPeriod;
     private javax.swing.JSpinner period;
     private javax.swing.JComboBox unit;
-    private java.util.ResourceBundle bundle;
+    java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }
