@@ -18,7 +18,7 @@ public class Task {
     protected Task() {
     }
 
-    public Task(int id, String description, long initialDelay, long period, String unit) {
+    public Task(String description, long initialDelay, long period, String unit) {
         this.id = id;
         this.description = description;
         this.initialDelay = initialDelay;

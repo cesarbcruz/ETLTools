@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package setup;
+package com.cesar.etltools.dominio;
 
 import com.cesar.etltools.dao.CriadorDeSessao;
 import com.cesar.etltools.dao.TaskDao;
-import com.cesar.etltools.dominio.Task;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import org.hibernate.Session;
 
 /**
  *
@@ -40,8 +41,20 @@ public class PerformerTask {
     }
 
     public static void main(String[] args) {
-        Task task = new Task(1, "teste", 10, 10, TimeUnit.SECONDS.toString());
-        new TaskDao(new CriadorDeSessao().getSession()).salvar(task);
-        new PerformerTask().beepForAnHour(task);
+        Session s = new CriadorDeSessao().getSession();
+        TaskDao dao = new TaskDao(s);
+        Task task = new Task("teste", 10, 10, TimeUnit.SECONDS.toString());
+        dao.begin();
+        dao.salvar(task);
+        dao.commit();
+
+        System.out.println(task.getId());
+
+        List<Task> tasks = dao.porDescricao("teste");
+
+        if (tasks != null && !tasks.isEmpty()) {
+            new PerformerTask().beepForAnHour(tasks.get(0));
+        }
+        s.close();
     }
 }
