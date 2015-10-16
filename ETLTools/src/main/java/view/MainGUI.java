@@ -22,6 +22,8 @@ public class MainGUI extends javax.swing.JFrame {
     public MainGUI(ResourceBundle bundle) {
         this.bundle = bundle;
         initComponents();
+        setSize(800, 600);
+        this.setLocationRelativeTo(null);
     }
 
     /**
