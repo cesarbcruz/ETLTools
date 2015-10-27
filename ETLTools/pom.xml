@@ -9,7 +9,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.2.18.Final-redhat-2</version>
+            <version>4.3.10.Final</version>
             <type>jar</type>
         </dependency>
         <dependency>

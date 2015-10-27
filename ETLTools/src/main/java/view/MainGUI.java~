@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -22,6 +23,8 @@ public class MainGUI extends javax.swing.JFrame {
     public MainGUI(ResourceBundle bundle) {
         this.bundle = bundle;
         initComponents();
+        setSize(800, 600);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -43,6 +46,8 @@ public class MainGUI extends javax.swing.JFrame {
         buttonEn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         list = new javax.swing.JList();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        log = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +66,6 @@ public class MainGUI extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("language/Bundle_pt_BR"); // NOI18N
         buttonCreateTask.setText(bundle.getString("MainGUI.buttonCreateTask.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -97,6 +101,21 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(jScrollPane1, gridBagConstraints);
+
+        log.setEditable(false);
+        log.setColumns(20);
+        log.setRows(5);
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("Bundle_pt_BR"); // NOI18N
+        log.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("MainGUI.log.border.title"))); // NOI18N
+        jScrollPane2.setViewportView(log);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.5;
+        jPanel2.add(jScrollPane2, gridBagConstraints);
 
         jSplitPane1.setLeftComponent(jPanel2);
 
@@ -168,6 +187,10 @@ public class MainGUI extends javax.swing.JFrame {
         return list;
     }
 
+    public JTextArea getLog() {
+        return log;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCreateTask;
     private javax.swing.JButton buttonEn;
@@ -176,7 +199,11 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JList list;
+    private javax.swing.JTextArea log;
+    private java.util.ResourceBundle bundle;
+
     // End of variables declaration//GEN-END:variables
 }

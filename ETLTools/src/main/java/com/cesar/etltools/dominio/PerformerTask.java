@@ -5,56 +5,43 @@
  */
 package com.cesar.etltools.dominio;
 
-import com.cesar.etltools.dao.CriadorDeSessao;
-import com.cesar.etltools.dao.TaskDao;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import org.hibernate.Session;
 
 /**
  *
  * @author cesar
  */
-public class PerformerTask {
+public abstract class PerformerTask {
+
+    public PerformerTask() {
+    }
 
     private final ScheduledExecutorService scheduler
             = Executors.newScheduledThreadPool(1);
 
-    public void beepForAnHour(Task task) {
-        final Runnable beeper = new Runnable() {
+    public void execute(final Task t) {
+        final Runnable taskRun;
+        taskRun = new Runnable() {
+            @Override
             public void run() {
-                System.out.println("beep");
+                System.out.println("Execute Task: " + t.getDescription());
+                taskEvent(t);
             }
         };
 
-        final ScheduledFuture<?> beeperHandle
-                = scheduler.scheduleAtFixedRate(beeper, task.getInitialDelay(), task.getPeriod(), TimeUnit.valueOf(task.getUnit()));
+        final ScheduledFuture<?> executeHandle
+                = scheduler.scheduleAtFixedRate(taskRun, t.getInitialDelay(), t.getPeriod(), TimeUnit.valueOf(t.getUnit()));
         scheduler.schedule(new Runnable() {
+            @Override
             public void run() {
-                beeperHandle.cancel(true);
+                executeHandle.cancel(true);
             }
         }, 60 * 60, SECONDS);
     }
 
-    public static void main(String[] args) {
-        Session s = new CriadorDeSessao().getSession();
-        TaskDao dao = new TaskDao(s);
-        Task task = new Task("teste", 10, 10, TimeUnit.SECONDS.toString());
-        dao.begin();
-        dao.salvar(task);
-        dao.commit();
-
-        System.out.println(task.getId());
-
-        List<Task> tasks = dao.porDescricao("teste");
-
-        if (tasks != null && !tasks.isEmpty()) {
-            new PerformerTask().beepForAnHour(tasks.get(0));
-        }
-        s.close();
-    }
+    public abstract void taskEvent(Task t);
 }

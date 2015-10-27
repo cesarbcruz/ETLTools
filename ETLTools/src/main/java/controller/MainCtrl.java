@@ -2,9 +2,9 @@ package controller;
 
 import com.cesar.etltools.dao.CriadorDeSessao;
 import com.cesar.etltools.dao.TaskDao;
+import com.cesar.etltools.dominio.PerformerTask;
 import com.cesar.etltools.dominio.Task;
 import java.awt.Color;
-import static java.awt.SystemColor.desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
@@ -19,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
+import org.hibernate.Session;
 import util.Messages;
 import view.MainGUI;
 
@@ -177,9 +179,13 @@ public class MainCtrl {
         addActionButtonEnUS();
         addActionButtonCreateTask();
         view.setVisible(true);
-        taskDao = new TaskDao(new CriadorDeSessao().getSession());
+        Session sessao = new CriadorDeSessao().getSession();
+        taskDao = new TaskDao(sessao);
         addActionList();
-        reloadList(taskDao.list());
+        List<Task> tasks = taskDao.list();
+        reloadList(tasks);
+        sessao.close();
+        runTask(tasks);
     }
 
     public static void main(String[] args) {
@@ -211,6 +217,27 @@ public class MainCtrl {
         };
         ctv.setTask(t);
         showInternalFrame(ctv.getView(), view.getButtonCreateTask().getText());
+    }
+
+    private void runTask(final List<Task> tasks) {
+        if (tasks != null && !tasks.isEmpty()) {
+            new Thread(){
+                @Override
+                public void run() {
+                    for (Task task : tasks) {
+                        new PerformerTask() {
+                            @Override
+                            public void taskEvent(Task t) {
+                                view.getLog().setText(view.getLog().getText()
+                                        .concat(new Date().toString()).concat(" - ")
+                                        .concat(view.getBundle().getString("MainGUI.messageRunTask.text"))
+                                        .concat(": ").concat(t.getDescription()).concat("\n"));
+                            }
+                        }.execute(task);
+                    }
+                }
+            }.start();
+        }
     }
 
 }
