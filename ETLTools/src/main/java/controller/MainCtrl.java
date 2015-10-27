@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
+import javax.swing.SwingUtilities;
 import org.hibernate.Session;
 import util.Messages;
 import view.MainGUI;
@@ -179,12 +180,10 @@ public class MainCtrl {
         addActionButtonEnUS();
         addActionButtonCreateTask();
         view.setVisible(true);
-        Session sessao = new CriadorDeSessao().getSession();
-        taskDao = new TaskDao(sessao);
+        taskDao = new TaskDao(new CriadorDeSessao().getSession());
         addActionList();
         List<Task> tasks = taskDao.list();
         reloadList(tasks);
-        sessao.close();
         runTask(tasks);
     }
 
@@ -206,6 +205,7 @@ public class MainCtrl {
             java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         new MainCtrl();
+
     }
 
     private void showCreateTask(Task t) {
@@ -221,22 +221,23 @@ public class MainCtrl {
 
     private void runTask(final List<Task> tasks) {
         if (tasks != null && !tasks.isEmpty()) {
-            new Thread(){
-                @Override
-                public void run() {
-                    for (Task task : tasks) {
-                        new PerformerTask() {
+            for (final Task task : tasks) {
+                new PerformerTask() {
+                    @Override
+                    public void taskEvent(final Task t) {
+                        SwingUtilities.invokeLater(new Runnable() {
                             @Override
-                            public void taskEvent(Task t) {
+                            public void run() {
                                 view.getLog().setText(view.getLog().getText()
                                         .concat(new Date().toString()).concat(" - ")
                                         .concat(view.getBundle().getString("MainGUI.messageRunTask.text"))
                                         .concat(": ").concat(t.getDescription()).concat("\n"));
+
                             }
-                        }.execute(task);
+                        });
                     }
-                }
-            }.start();
+                }.execute(task);
+            }
         }
     }
 
