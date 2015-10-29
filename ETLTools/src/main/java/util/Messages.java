@@ -30,8 +30,4 @@ public class Messages {
     public static void information(Component parentComponent, String message, String title) {
         JOptionPane.showMessageDialog(parentComponent, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
-    
-    public static void error(Component parentComponent, String message, String title) {
-        JOptionPane.showMessageDialog(parentComponent, message, title, JOptionPane.ERROR_MESSAGE);
-    }
 }

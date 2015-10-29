@@ -108,7 +108,7 @@ public abstract class CreateTaskCtrl {
                     view.dispose();
                     event(dao.list());
                 } catch (Exception ex) {
-                    Messages.error(view, ex.getMessage(), view.getBundle().getString("MainGUI.messageErrorTitle.text"));
+                    throw new RuntimeException(ex);
                 }
             }
         });

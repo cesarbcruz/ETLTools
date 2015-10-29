@@ -21,9 +21,10 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
-import org.hibernate.Session;
+import util.ExceptionHandler;
 import util.Messages;
 import view.MainGUI;
+import view.SQLBuilderGUI;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -73,24 +74,23 @@ public class MainCtrl {
         JInternalFrame[] frames = desktop.getAllFrames();
         int x = 0;
         int y = 0;
-        int width = 389;
-        int height = 214;
+
 
         for (int i = 0; i < frames.length; i++) {
             if (!frames[i].isIcon()) {
                 try {
                     frames[i].setMaximum(false);
 
-                    frames[i].reshape(x, y, width, height);
+                    frames[i].reshape(x, y, frames[i].getWidth(), frames[i].getHeight());
 
                     x += 100;
                     y += 100;
 
-                    if (x + width > desktop.getWidth()) {
+                    if (x + frames[i].getWidth() > desktop.getWidth()) {
                         x = 0;
                     }
 
-                    if (y + height > desktop.getHeight()) {
+                    if (y + frames[i].getHeight() > desktop.getHeight()) {
                         y = 0;
                     }
 
@@ -179,6 +179,7 @@ public class MainCtrl {
         addActionButtonPtBr();
         addActionButtonEnUS();
         addActionButtonCreateTask();
+        addActionButtonSQLBuilder();
         view.setVisible(true);
         taskDao = new TaskDao(new CriadorDeSessao().getSession());
         addActionList();
@@ -189,6 +190,7 @@ public class MainCtrl {
 
     public static void main(String[] args) {
         try {
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -206,6 +208,21 @@ public class MainCtrl {
         }
         new MainCtrl();
 
+    }
+
+    private void addActionButtonSQLBuilder() {
+        view.getButtonSQLBuilder().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showSQLBuilder();
+            }
+        });
+
+    }
+
+    private void showSQLBuilder() {
+        SQLBuilderCtrl sqlBuilder = new SQLBuilderCtrl();
+        showInternalFrame(sqlBuilder.getView(), view.getButtonSQLBuilder().getText());
     }
 
     private void showCreateTask(Task t) {

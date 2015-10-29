@@ -41,6 +41,7 @@ public class MainGUI extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         jPanel2 = new javax.swing.JPanel();
         buttonCreateTask = new javax.swing.JButton();
+        buttonSQLBuilder = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         buttonPtBr = new javax.swing.JButton();
         buttonEn = new javax.swing.JButton();
@@ -73,6 +74,13 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonCreateTask, gridBagConstraints);
 
+        buttonSQLBuilder.setText(bundle.getString("MainGUI.buttonSQLBuilder.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel2.add(buttonSQLBuilder, gridBagConstraints);
+
         buttonPtBr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/language/pt-br.png"))); // NOI18N
         buttonPtBr.setText(bundle.getString("MainGUI.buttonPtBr.text")); // NOI18N
         buttonPtBr.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +96,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         jPanel2.add(jPanel3, gridBagConstraints);
 
         list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -96,7 +104,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -110,7 +118,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.5;
@@ -165,6 +173,10 @@ public class MainGUI extends javax.swing.JFrame {
     public JButton getButtonCreateTask() {
         return buttonCreateTask;
     }
+    
+    public JButton getButtonSQLBuilder() {
+        return buttonSQLBuilder;
+    }
 
     public JButton getButtonEn() {
         return buttonEn;
@@ -194,6 +206,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JButton buttonCreateTask;
     private javax.swing.JButton buttonEn;
     private javax.swing.JButton buttonPtBr;
+    private javax.swing.JButton buttonSQLBuilder;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -202,7 +215,6 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JList list;
     private javax.swing.JTextArea log;
-    private java.util.ResourceBundle bundle;
-
+    java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }
