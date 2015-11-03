@@ -7,7 +7,7 @@ package com.cesar.etltools.dao.jdbc.factory;
 
 import com.cesar.etltools.dao.jdbc.MySql;
 import com.cesar.etltools.dao.jdbc.PostgreSQL;
-import com.cesar.etltools.model.SGDB;
+import com.cesar.etltools.model.ParamDatabase;
 
 /**
  *
@@ -15,12 +15,12 @@ import com.cesar.etltools.model.SGDB;
  */
 public class DatabaseFactory {
 
-    public static Database getDatabase(SGDB sgdb) {
-        switch (sgdb) {
+    public static Database getDatabase(ParamDatabase paramDatabase) {
+        switch (paramDatabase.getSgdb()) {
             case MYSQL:
-                return new MySql();
+                return new MySql(paramDatabase);
             case POSTGRES:
-                return new PostgreSQL();
+                return new PostgreSQL(paramDatabase);
             default:
                 return null;
         }

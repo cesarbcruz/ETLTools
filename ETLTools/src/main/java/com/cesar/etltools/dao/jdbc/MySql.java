@@ -6,11 +6,12 @@
 package com.cesar.etltools.dao.jdbc;
 
 import com.cesar.etltools.dao.jdbc.factory.Database;
-import com.cesar.etltools.model.SGDB;
-import java.sql.Connection;
+import com.cesar.etltools.model.ParamDatabase;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,9 +19,23 @@ import java.util.logging.Logger;
  */
 public class MySql extends Database {
 
-    @Override
-    public Connection connectDatabase(String ipHost, String port, String user, String password) throws ClassNotFoundException, SQLException {
-            return conecta(SGDB.MYSQL, ipHost, port, user, password);
+    public MySql(ParamDatabase paramDataBase) {
+        super.contruct(paramDataBase);
     }
-    
+
+    @Override
+    public List<String> listDatabase() throws SQLException, ClassNotFoundException {
+        List<String> databases = new ArrayList<>();
+        try {
+            DatabaseMetaData meta = connect().getMetaData();
+            ResultSet res = meta.getCatalogs();
+            while (res.next()) {
+                databases.add(res.getString("TABLE_CAT"));
+            }
+        } finally {
+            closeConnection();
+        }
+        return databases;
+    }
+
 }

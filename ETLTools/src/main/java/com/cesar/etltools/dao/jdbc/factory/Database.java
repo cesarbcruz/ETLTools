@@ -6,8 +6,8 @@
 package com.cesar.etltools.dao.jdbc.factory;
 
 import com.cesar.etltools.dao.jdbc.ConnectionDatabase;
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -15,6 +15,6 @@ import java.sql.SQLException;
  */
 public abstract class Database extends ConnectionDatabase{
     
-    public abstract Connection connectDatabase(String ipHost, String port, String user, String password) throws ClassNotFoundException, SQLException;
+    public abstract List<String> listDatabase() throws SQLException, ClassNotFoundException;
     
 }

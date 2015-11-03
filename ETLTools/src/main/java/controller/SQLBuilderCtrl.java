@@ -6,14 +6,14 @@
 package controller;
 
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
+import com.cesar.etltools.model.ParamDatabase;
 import com.cesar.etltools.model.SGDB;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JInternalFrame;
 import view.SQLBuilderGUI;
 
@@ -36,7 +36,14 @@ public class SQLBuilderCtrl {
     }
 
     public void connectDatabase() throws ClassNotFoundException, SQLException {
-        Connection con = DatabaseFactory.getDatabase((SGDB) view.getSgbd().getSelectedItem()).connectDatabase(view.getIphost().getText(), view.getPort().getText(), view.getUser().getText(), view.getPassword().getText());
+        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbd().getSelectedItem(), view.getIphost().getText(), view.getPort().getText(), view.getUser().getText(), view.getPassword().getText());
+        DefaultListModel model = new DefaultListModel();
+        List<String> databases = DatabaseFactory.getDatabase(param).listDatabase();
+        for (String database : databases) {
+            model.addElement(database);
+        }
+        view.getTabelas().setModel(model);
+
     }
 
     private void loadComboSgdb() {

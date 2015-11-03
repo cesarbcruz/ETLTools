@@ -12,7 +12,7 @@ package com.cesar.etltools.model;
 public enum SGDB {
 
     POSTGRES(1,"PostgreSQL","org.postgresql.Driver","jdbc:postgresql://"),
-    MYSQL(2,"MySQL","org.postgresql.Driver","jdbc:postgresql://");
+    MYSQL(2,"MySQL","com.mysql.jdbc.Driver","jdbc:mysql://");
         
     private final int id;
     private final String description;

@@ -5,7 +5,7 @@
  */
 package com.cesar.etltools.dao.jdbc;
 
-import com.cesar.etltools.model.SGDB;
+import com.cesar.etltools.model.ParamDatabase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,13 +16,24 @@ import java.sql.SQLException;
  */
 public class ConnectionDatabase {
 
-    public Connection conecta(SGDB sgdb, String ipHost, String port, String user, String password) throws ClassNotFoundException, SQLException {
+    private ParamDatabase paramDatabase;
+    private Connection con;
 
-        String url = sgdb.getUrl() + ipHost + ":" + port;
-
-        Class.forName(sgdb.getDriver());
-
-        return (Connection) DriverManager.getConnection(url, user, password);
-
+    public void contruct(ParamDatabase paramDatabase) {
+        this.paramDatabase = paramDatabase;
     }
+
+    public Connection connect() throws ClassNotFoundException, SQLException {
+        String url = paramDatabase.getSgdb().getUrl() + paramDatabase.getIpHost() + ":" + paramDatabase.getPort();
+        Class.forName(paramDatabase.getSgdb().getDriver());
+        con = (Connection) DriverManager.getConnection(url, paramDatabase.getUser(), paramDatabase.getPassword());
+        return con;
+    }
+    
+    protected void closeConnection() throws SQLException{
+        if(con!=null){
+            con.close();
+        }
+    }
+
 }
