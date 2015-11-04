@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JInternalFrame;
@@ -29,18 +31,21 @@ public class SQLBuilderCtrl {
         view = new SQLBuilderGUI(this);
         addActionButtonConnect();
         loadComboSgdb();
+        configureListTransfer();
     }
 
     public JInternalFrame getView() {
         return view;
     }
 
-    public void connectDatabase() throws ClassNotFoundException, SQLException {
+    public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
         ParamDatabase param = new ParamDatabase((SGDB) view.getSgbd().getSelectedItem(), view.getIphost().getText(), view.getPort().getText(), view.getUser().getText(), view.getPassword().getText());
         DefaultListModel model = new DefaultListModel();
         List<String> databases = DatabaseFactory.getDatabase(param).listDatabase();
         for (String database : databases) {
-            model.addElement(database);
+            ParamDatabase parametro = (ParamDatabase) param.clone();
+            parametro.setDatabaseName(database);
+            model.addElement(parametro);
         }
         view.getTabelas().setModel(model);
 
@@ -57,11 +62,19 @@ public class SQLBuilderCtrl {
             public void actionPerformed(ActionEvent e) {
                 try {
                     connectDatabase();
-                } catch (ClassNotFoundException | SQLException ex) {
+                } catch (ClassNotFoundException | SQLException | CloneNotSupportedException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
+    }
+
+    private void configureListTransfer() {
+        view.getListDatabases().setDragEnabled(true);
+        view.getListDatabases().setTransferHandler(new ListTransferHandler());
+        view.getDatabaseSource().setTransferHandler(new ListTransferHandler());
+        view.getDatabaseDestination().setTransferHandler(new ListTransferHandler());
+        
     }
 
 }

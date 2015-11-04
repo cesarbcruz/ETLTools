@@ -9,13 +9,14 @@ package com.cesar.etltools.model;
  *
  * @author cesar
  */
-public class ParamDatabase {
+public class ParamDatabase implements Cloneable {
 
     private SGDB sgdb;
     private String ipHost;
     private String port;
     private String user;
     private String password;
+    private String databaseName;
 
     public ParamDatabase(SGDB sgdb, String ipHost, String port, String user, String password) {
         this.sgdb = sgdb;
@@ -63,6 +64,25 @@ public class ParamDatabase {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return getDatabaseName();
     }
     
     

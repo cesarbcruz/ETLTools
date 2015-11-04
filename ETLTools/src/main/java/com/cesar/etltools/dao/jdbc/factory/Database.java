@@ -17,4 +17,6 @@ public abstract class Database extends ConnectionDatabase{
     
     public abstract List<String> listDatabase() throws SQLException, ClassNotFoundException;
     
+    public abstract List<String> listTables(String databaseName) throws SQLException, ClassNotFoundException;
+    
 }

@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JList;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
@@ -37,7 +38,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         user = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelas = new javax.swing.JList();
+        listDatabases = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         iphost = new javax.swing.JFormattedTextField();
@@ -45,6 +46,13 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         connect = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         password = new javax.swing.JPasswordField();
+        jPanel2 = new javax.swing.JPanel();
+        databaseDestination = new javax.swing.JTextField();
+        databaseSource = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listTableSource = new javax.swing.JList();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listTableDestination = new javax.swing.JList();
 
         setClosable(true);
         setMaximizable(true);
@@ -70,7 +78,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         next.setText(bundle.getString("SQLBuilderGUI.next.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -106,16 +114,15 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jLabel2, gridBagConstraints);
 
-        jScrollPane1.setViewportView(tabelas);
+        listDatabases.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SQLBuilderGUI.listDatabases.border.title"))); // NOI18N
+        jScrollPane1.setViewportView(listDatabases);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
@@ -154,11 +161,6 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         jPanel1.add(jLabel7, gridBagConstraints);
 
         connect.setText(bundle.getString("SQLBuilderGUI.connect.text")); // NOI18N
-        connect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
@@ -183,14 +185,63 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(password, gridBagConstraints);
 
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        databaseDestination.setText(bundle.getString("SQLBuilderGUI.databaseDestination.text")); // NOI18N
+        databaseDestination.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SQLBuilderGUI.databaseDestination.border.title"))); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        jPanel2.add(databaseDestination, gridBagConstraints);
+
+        databaseSource.setText(bundle.getString("SQLBuilderGUI.databaseSource.text")); // NOI18N
+        databaseSource.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SQLBuilderGUI.databaseSource.border.title"))); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        jPanel2.add(databaseSource, gridBagConstraints);
+
+        listTableSource.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SQLBuilderGUI.listTableSource.border.title"))); // NOI18N
+        jScrollPane2.setViewportView(listTableSource);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jScrollPane2, gridBagConstraints);
+
+        listTableDestination.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("SQLBuilderGUI.listTableDestination.border.title"))); // NOI18N
+        jScrollPane3.setViewportView(listTableDestination);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jScrollPane3, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel1.add(jPanel2, gridBagConstraints);
+
         getContentPane().add(jPanel1, "card2");
 
         setBounds(0, 0, 800, 600);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void connectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_connectActionPerformed
 
     public SQLBuilderCtrl getControl() {
         return control;
@@ -221,18 +272,37 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
     }
 
     public JList getTabelas() {
-        return tabelas;
+        return listDatabases;
     }
 
     public JFormattedTextField getUser() {
         return user;
     }
 
-    
+    public JTextField getDatabaseDestination() {
+        return databaseDestination;
+    }
 
+    public JTextField getDatabaseSource() {
+        return databaseSource;
+    }
+
+    public JList getListDatabases() {
+        return listDatabases;
+    }
+
+    public JList getListTableSource() {
+        return listTableSource;
+    }
+
+    public JList getListTableDestination() {
+        return listTableDestination;
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connect;
+    private javax.swing.JTextField databaseDestination;
+    private javax.swing.JTextField databaseSource;
     private javax.swing.JFormattedTextField iphost;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -240,12 +310,17 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList listDatabases;
+    private javax.swing.JList listTableDestination;
+    private javax.swing.JList listTableSource;
     private javax.swing.JButton next;
     private javax.swing.JPasswordField password;
     private javax.swing.JFormattedTextField port;
     private javax.swing.JComboBox sgbd;
-    private javax.swing.JList tabelas;
     private javax.swing.JFormattedTextField user;
     // End of variables declaration//GEN-END:variables
 }

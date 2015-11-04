@@ -53,4 +53,9 @@ public class PostgreSQL extends Database {
         return listaDatabase;
     }
 
+    @Override
+    public List<String> listTables(String databaseName) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

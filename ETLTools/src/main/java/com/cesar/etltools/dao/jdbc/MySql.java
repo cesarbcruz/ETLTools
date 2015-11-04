@@ -38,4 +38,19 @@ public class MySql extends Database {
         return databases;
     }
 
+    @Override
+    public List<String> listTables(String databaseName) throws SQLException, ClassNotFoundException {
+        List<String> tables = new ArrayList<>();
+        try {
+            String[] types = {"TABLE"};
+            ResultSet resultSet = connect().getMetaData().getTables(databaseName, null, "%", types);
+            while (resultSet.next()) {
+                tables.add(resultSet.getString(3));
+            }
+        } finally {
+            closeConnection();
+        }
+        return tables;
+    }
+
 }

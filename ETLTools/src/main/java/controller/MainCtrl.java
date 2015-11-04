@@ -24,7 +24,6 @@ import javax.swing.SwingUtilities;
 import util.ExceptionHandler;
 import util.Messages;
 import view.MainGUI;
-import view.SQLBuilderGUI;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
