@@ -24,38 +24,32 @@ public class PostgreSQL extends Database {
     }
 
     @Override
-    public List<String> listDatabase() throws SQLException, ClassNotFoundException {
+    public List<String> listTables() throws SQLException, ClassNotFoundException {
 
-        List<String> listaDatabase = new ArrayList<>();
+        List<String> listTable = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append("datname as nm_database ");
-        sql.append("FROM ");
-        sql.append("pg_database ");
-        sql.append("WHERE ");
-        sql.append("datistemplate = false ");
-        sql.append("AND ");
-        sql.append("datname != 'postgres' ");
-        sql.append("ORDER BY nm_database");
+
+        sql.append("\n SELECT");
+        sql.append("\n table_schema || '.' || table_name as tablename");
+        sql.append("\n FROM");
+        sql.append("\n information_schema.tables");
+        sql.append("\n WHERE");
+        sql.append("\n table_type = 'BASE TABLE'");
+        sql.append("\n AND");
+        sql.append("\n table_schema NOT IN ('pg_catalog', 'information_schema');");
 
         try {
 
             PreparedStatement pstmt = connect().prepareStatement(sql.toString());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                listaDatabase.add(rs.getString("nm_database"));
+                listTable.add(rs.getString("tablename"));
             }
+            return listTable;
         } finally {
             closeConnection();
-
         }
-        return listaDatabase;
-    }
-
-    @Override
-    public List<String> listTables(String databaseName) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

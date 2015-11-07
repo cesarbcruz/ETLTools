@@ -24,14 +24,14 @@ public class ConnectionDatabase {
     }
 
     public Connection connect() throws ClassNotFoundException, SQLException {
-        String url = paramDatabase.getSgdb().getUrl() + paramDatabase.getIpHost() + ":" + paramDatabase.getPort();
+        String url = paramDatabase.getSgdb().getUrl() + paramDatabase.getIpHost() + ":" + paramDatabase.getPort() + "/" + paramDatabase.getDatabase();
         Class.forName(paramDatabase.getSgdb().getDriver());
         con = (Connection) DriverManager.getConnection(url, paramDatabase.getUser(), paramDatabase.getPassword());
         return con;
     }
-    
-    protected void closeConnection() throws SQLException{
-        if(con!=null){
+
+    protected void closeConnection() throws SQLException {
+        if (con != null) {
             con.close();
         }
     }

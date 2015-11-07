@@ -16,14 +16,15 @@ public class ParamDatabase implements Cloneable {
     private String port;
     private String user;
     private String password;
-    private String databaseName;
+    private String database;
 
-    public ParamDatabase(SGDB sgdb, String ipHost, String port, String user, String password) {
+    public ParamDatabase(SGDB sgdb, String ipHost, String port, String user, String password, String database) {
         this.sgdb = sgdb;
         this.ipHost = ipHost;
         this.port = port;
         this.user = user;
         this.password = password;
+        this.database = database;
     }
 
     public SGDB getSgdb() {
@@ -66,23 +67,18 @@ public class ParamDatabase implements Cloneable {
         this.password = password;
     }
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-    }
-
-
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 
+    public String getDatabase() {
+        return database;
+    }
+
     @Override
     public String toString() {
-        return getDatabaseName();
+        return getDatabase();
     }
     
     

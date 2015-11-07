@@ -12,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JInternalFrame;
@@ -39,21 +37,13 @@ public class SQLBuilderCtrl {
     }
 
     public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
-        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbd().getSelectedItem(), view.getIphost().getText(), view.getPort().getText(), view.getUser().getText(), view.getPassword().getText());
-        DefaultListModel model = new DefaultListModel();
-        List<String> databases = DatabaseFactory.getDatabase(param).listDatabase();
-        for (String database : databases) {
-            ParamDatabase parametro = (ParamDatabase) param.clone();
-            parametro.setDatabaseName(database);
-            model.addElement(parametro);
-        }
-        view.getTabelas().setModel(model);
-
+        connectSourceDatabase();
+        connectDestinationDatabase();
     }
 
     private void loadComboSgdb() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(SGDB.values());
-        view.getSgbd().setModel(model);
+        view.getSgbdSource().setModel(new DefaultComboBoxModel(SGDB.values()));
+        view.getSgbdDestination().setModel(new DefaultComboBoxModel(SGDB.values()));
     }
 
     private void addActionButtonConnect() {
@@ -70,11 +60,36 @@ public class SQLBuilderCtrl {
     }
 
     private void configureListTransfer() {
-        view.getListDatabases().setDragEnabled(true);
-        view.getListDatabases().setTransferHandler(new ListTransferHandler());
-        view.getDatabaseSource().setTransferHandler(new ListTransferHandler());
-        view.getDatabaseDestination().setTransferHandler(new ListTransferHandler());
+        view.getListTableSource().setDragEnabled(true);
+        view.getListTableSource().setTransferHandler(new ListTransferHandler());
+        view.getListTableSource().setName("0");
         
+        view.getListTableDestination().setDragEnabled(true);
+        view.getListTableDestination().setTransferHandler(new ListTransferHandler());
+        view.getListTableDestination().setName("1");
+
+        view.getTableRelationship().setDragEnabled(true);
+        view.getTableRelationship().setTransferHandler(new ListTransferHandler());
+    }
+
+    private void connectSourceDatabase() throws SQLException, ClassNotFoundException {
+        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), view.getIphostSource().getText(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
+        DefaultListModel model = new DefaultListModel();
+        List<String> tables = DatabaseFactory.getDatabase(param).listTables();
+        for (String database : tables) {
+            model.addElement(database);
+        }
+        view.getListTableSource().setModel(model);
+    }
+    
+     private void connectDestinationDatabase() throws SQLException, ClassNotFoundException {
+        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdDestination().getSelectedItem(), view.getIphostDestination().getText(), view.getPortDestination().getText(), view.getUserDestination().getText(), new String(view.getPasswordDestination().getPassword()), view.getDatabaseDestination().getText());
+        DefaultListModel model = new DefaultListModel();
+        List<String> tables = DatabaseFactory.getDatabase(param).listTables();
+        for (String database : tables) {
+            model.addElement(database);
+        }
+        view.getListTableDestination().setModel(model);
     }
 
 }

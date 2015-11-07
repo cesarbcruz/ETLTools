@@ -24,33 +24,20 @@ public class MySql extends Database {
     }
 
     @Override
-    public List<String> listDatabase() throws SQLException, ClassNotFoundException {
-        List<String> databases = new ArrayList<>();
-        try {
-            DatabaseMetaData meta = connect().getMetaData();
-            ResultSet res = meta.getCatalogs();
-            while (res.next()) {
-                databases.add(res.getString("TABLE_CAT"));
-            }
-        } finally {
-            closeConnection();
-        }
-        return databases;
-    }
-
-    @Override
-    public List<String> listTables(String databaseName) throws SQLException, ClassNotFoundException {
+    public List<String> listTables() throws SQLException, ClassNotFoundException {
         List<String> tables = new ArrayList<>();
         try {
-            String[] types = {"TABLE"};
-            ResultSet resultSet = connect().getMetaData().getTables(databaseName, null, "%", types);
-            while (resultSet.next()) {
-                tables.add(resultSet.getString(3));
+            DatabaseMetaData meta = connect().getMetaData();
+
+            ResultSet res = meta.getTables(null, null, null,
+                    new String[]{"TABLE"});
+            while (res.next()) {
+                String schem = res.getString("TABLE_SCHEM");
+                tables.add(schem != null ? schem + "." + res.getString("TABLE_NAME") : res.getString("TABLE_NAME"));
             }
+            return tables;
         } finally {
             closeConnection();
         }
-        return tables;
     }
-
 }
