@@ -13,6 +13,7 @@ public final class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread aThread, Throwable aThrowable) {
+        aThrowable.printStackTrace();
         new ErrorDialog(aThrowable).setVisible(true);
     }
 

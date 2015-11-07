@@ -1,21 +1,26 @@
 package controller;
 
+import com.cesar.etltools.model.SortedListModel;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
-public class ListTransferHandler extends StringTransferHandler {
+public abstract class ListTransferHandler extends StringTransferHandler {
 
-    static int indexItemList = -1;
+    static String objectItemList = null;
     static int indexRowTable = -1;
     static int indexColumnTable = -1;
     static int column = 0;
+    static String substitutedValue = null;
+    static JComponent componentExport = null;
+    static boolean transferOK = false;
 
     @Override
     protected String exportString(JComponent c) {
+        componentExport = c;
         if (c instanceof JList) {
             JList list = (JList) c;
-            indexItemList = list.getSelectedIndex();
+            objectItemList = list.getSelectedValue().toString();
             column = Integer.parseInt(list.getName());
+            eventExportJList();
             return list.getSelectedValue().toString();
         } else if (c instanceof JTable) {
             JTable table = (JTable) c;
@@ -23,41 +28,54 @@ public class ListTransferHandler extends StringTransferHandler {
             indexColumnTable = table.getSelectedColumn();
             return table.getValueAt(indexRowTable, indexColumnTable).toString();
         }
+        transferOK = false;
         return "";
     }
 
     @Override
     protected void importString(JComponent c, String str) {
-        if (c instanceof JTable) {
+        if (componentExport instanceof JList && c instanceof JTable) {
             JTable table = (JTable) c;
-            if (table.getSelectedRow() < 0) {
-                ((DefaultTableModel) table.getModel()).addRow(new Object[]{"", "", ""});
+            if (!table.getValueAt(table.getSelectedRow(), column).toString().isEmpty()) {
+                substitutedValue = table.getValueAt(table.getSelectedRow(), column).toString();
             }
             table.setValueAt(str, table.getSelectedRow(), column);
-        } else if (c instanceof JList) {
+            transferOK = true;
+        } else if (componentExport instanceof JTable && c instanceof JList) {
             JList list = (JList) c;
-            ((DefaultListModel) list.getModel()).addElement(str);
+            if (indexColumnTable == Integer.parseInt(list.getName())) {
+                ((SortedListModel) list.getModel()).add(str);
+                transferOK = true;
+            }
         }
     }
 
     @Override
     protected void cleanup(JComponent c, boolean remove) {
-        if (c instanceof JList) {
-            if (remove && indexItemList > -1) {
-                JList source = (JList) c;
-                ((DefaultListModel) source.getModel()).remove(indexItemList);
-                indexItemList = -1;
+        if (transferOK) {
+            if (c instanceof JList) {
+                if (remove && objectItemList != null && !objectItemList.isEmpty()) {
+                    JList source = (JList) c;
+                    if (substitutedValue != null && !substitutedValue.isEmpty()) {
+                        ((SortedListModel) source.getModel()).add(substitutedValue);
+                        substitutedValue = null;
+                    }
+                    ((SortedListModel) source.getModel()).removeElement(objectItemList);
+                    objectItemList = null;
+                }
+            } else if (c instanceof JTable) {
+                JTable table = (JTable) c;
+                table.setValueAt("", indexRowTable, indexColumnTable);
+                indexRowTable = -1;
+                indexColumnTable = -1;
             }
-        } else if (c instanceof JTable) {
-            JTable table = (JTable) c;
-            table.setValueAt("", indexRowTable, indexColumnTable);
-            if (table.getValueAt(indexRowTable, 0).toString().isEmpty()
-                    && table.getValueAt(indexRowTable, 1).toString().isEmpty()) {
-                ((DefaultTableModel) table.getModel()).removeRow(indexRowTable);
-            }
-            indexRowTable = -1;
-            indexColumnTable = -1;
+            transferOK = false;
         }
+        eventCleanup();
     }
+
+    abstract void eventExportJList();
+
+    abstract void eventCleanup();
 
 }
