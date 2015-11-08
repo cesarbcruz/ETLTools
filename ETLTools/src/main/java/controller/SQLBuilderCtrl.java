@@ -5,16 +5,23 @@
  */
 package controller;
 
+import com.cesar.etltools.dao.CriadorDeSessao;
+import com.cesar.etltools.dao.TaskDao;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
+import com.cesar.etltools.dominio.Task;
+import com.cesar.etltools.model.ButtonColumn;
 import com.cesar.etltools.model.ParamDatabase;
 import com.cesar.etltools.model.SGDB;
 import com.cesar.etltools.model.SortedListModel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JInternalFrame;
 import javax.swing.JTable;
@@ -40,6 +47,12 @@ public class SQLBuilderCtrl {
         addActionButtonConnect();
         loadComboSgdb();
         configureListTransfer();
+        configureBaloonTip();
+        loadComboTask();
+        configureTableRelationship();
+    }
+
+    private void configureBaloonTip() {
         b1 = new BalloonTip(view.getScrollTablesSource(), "<html>Primeiro selecione uma tabela de origem<br>e arraste para o relacionamento<br></html>", new EdgedBalloonStyle(Color.WHITE, Color.BLUE), true);
         b1.setVisible(false);
         b2 = new BalloonTip(view.getScrollTablesDestination(), "<html>Depois selecione uma tabela de destino<br>e arraste para o relacionamento</html>", new EdgedBalloonStyle(Color.WHITE, Color.BLUE), true);
@@ -50,6 +63,16 @@ public class SQLBuilderCtrl {
 
     public JInternalFrame getView() {
         return view;
+    }
+
+    private void loadComboTask() {
+        TaskDao taskDao = new TaskDao(new CriadorDeSessao().getSession());
+        List<Task> tasks = taskDao.list();
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        for (Task task : tasks) {
+            model.addElement(task);
+        }
+        view.getComboTask().setModel(model);
     }
 
     public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
@@ -173,6 +196,19 @@ public class SQLBuilderCtrl {
         if (view.getTableRelationship().getRowCount() > 0) {
             b3.setVisible(true);
         }
+    }
+
+    private void configureTableRelationship() {
+        Action edit = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                JTable table = (JTable) e.getSource();
+                int modelRow = Integer.valueOf(e.getActionCommand());
+                ((DefaultTableModel) table.getModel()).removeRow(modelRow);
+            }
+        };
+
+        ButtonColumn buttonColumn = new ButtonColumn(view.getTableRelationship(), edit, 3);
+        buttonColumn.setMnemonic(KeyEvent.VK_E);
     }
 
 }

@@ -71,7 +71,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         connect = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        comboTask = new javax.swing.JComboBox();
         save = new javax.swing.JButton();
 
         setClosable(true);
@@ -245,7 +245,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -261,9 +261,9 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
             tableRelationship.getColumnModel().getColumn(2).setPreferredWidth(80);
             tableRelationship.getColumnModel().getColumn(2).setMaxWidth(80);
             tableRelationship.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("SQLBuilderGUI.tableRelationship.columnModel.title2")); // NOI18N
-            tableRelationship.getColumnModel().getColumn(3).setMinWidth(18);
-            tableRelationship.getColumnModel().getColumn(3).setPreferredWidth(18);
-            tableRelationship.getColumnModel().getColumn(3).setMaxWidth(18);
+            tableRelationship.getColumnModel().getColumn(3).setMinWidth(25);
+            tableRelationship.getColumnModel().getColumn(3).setPreferredWidth(25);
+            tableRelationship.getColumnModel().getColumn(3).setMaxWidth(25);
             tableRelationship.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("SQLBuilderGUI.tableRelationship.columnModel.title3")); // NOI18N
         }
 
@@ -455,7 +455,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel5.add(jComboBox1, gridBagConstraints);
+        jPanel5.add(comboTask, gridBagConstraints);
 
         save.setText(bundle.getString("SQLBuilderGUI.save.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -486,6 +486,10 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
 
     public JFormattedTextField getDatabaseDestination() {
         return databaseDestination;
+    }
+
+    public JComboBox getComboTask() {
+        return comboTask;
     }
 
     public JFormattedTextField getDatabaseSource() {
@@ -563,12 +567,12 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox comboTask;
     private javax.swing.JButton connect;
     private javax.swing.JFormattedTextField databaseDestination;
     private javax.swing.JFormattedTextField databaseSource;
     private javax.swing.JFormattedTextField iphostDestination;
     private javax.swing.JFormattedTextField iphostSource;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

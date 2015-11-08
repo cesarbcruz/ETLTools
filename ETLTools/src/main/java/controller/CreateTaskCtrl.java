@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JInternalFrame;
-import net.java.balloontip.BalloonTip;
 import util.Messages;
 import view.CreateTaskGUI;
 
