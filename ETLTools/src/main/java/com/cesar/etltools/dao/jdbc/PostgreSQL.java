@@ -9,6 +9,7 @@ import com.cesar.etltools.dao.jdbc.factory.Database;
 import com.cesar.etltools.model.ParamDatabase;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,22 @@ public class PostgreSQL extends Database {
                 listTable.add(rs.getString("tablename"));
             }
             return listTable;
+        } finally {
+            closeConnection();
+        }
+    }
+
+    public List<String> listFieldsTable(String tableName) throws ClassNotFoundException, SQLException {
+        try {
+            List<String> list = new ArrayList<>();
+            PreparedStatement pstmt = connect().prepareStatement("SELECT * FROM " + tableName+" LIMIT 0");
+            ResultSet rs = pstmt.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
+            for (int i = 1; i < columnCount + 1; i++) {
+                list.add(rsmd.getColumnName(i));
+            }
+            return list;
         } finally {
             closeConnection();
         }

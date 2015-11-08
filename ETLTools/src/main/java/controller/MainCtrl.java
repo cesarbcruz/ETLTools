@@ -220,7 +220,7 @@ public class MainCtrl {
     }
 
     private void showSQLBuilder() {
-        SQLBuilderCtrl sqlBuilder = new SQLBuilderCtrl();
+        SQLBuilderCtrl sqlBuilder = new SQLBuilderCtrl(view);
         showInternalFrame(sqlBuilder.getView(), view.getButtonSQLBuilder().getText());
     }
 

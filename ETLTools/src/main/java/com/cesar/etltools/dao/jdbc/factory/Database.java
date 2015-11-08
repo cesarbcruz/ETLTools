@@ -16,5 +16,6 @@ import java.util.List;
 public abstract class Database extends ConnectionDatabase{
     
     public abstract List<String> listTables() throws SQLException, ClassNotFoundException;
+    public abstract List<String> listFieldsTable(String tableName) throws ClassNotFoundException, SQLException;
     
 }
