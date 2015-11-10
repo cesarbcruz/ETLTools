@@ -1,5 +1,7 @@
 package com.cesar.etltools.dao;
 
+import com.cesar.etltools.dominio.Entity;
+import com.cesar.etltools.dominio.Field;
 import com.cesar.etltools.dominio.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,8 +23,7 @@ public class CriadorDeSessao {
 
     public Configuration getConfig() {
         if (config == null) {
-            config = new AnnotationConfiguration()
-                    .addAnnotatedClass(Task.class)
+            config = listEntity()
                     .setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver")
                     //.setProperty("hibernate.connection.url", "jdbc:hsqldb:ETLTools.db;shutdown=true")
                     .setProperty("hibernate.connection.url", "jdbc:hsqldb:file:./db/ETLTools")
@@ -39,8 +40,7 @@ public class CriadorDeSessao {
 
     public Configuration getConfigMysql() {
         if (config == null) {
-            config = new AnnotationConfiguration()
-                    .addAnnotatedClass(Task.class)
+            config = listEntity()                    
                     .setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
                     .setProperty("hibernate.connection.url", "jdbc:mysql://localhost/ETLTools")
                     .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
@@ -49,5 +49,12 @@ public class CriadorDeSessao {
                     .setProperty("hibernate.show_sql", "true");
         }
         return config;
+    }
+    
+    private AnnotationConfiguration listEntity(){
+        return new AnnotationConfiguration()
+                .addAnnotatedClass(Task.class)
+                .addAnnotatedClass(Entity.class)
+                .addAnnotatedClass(Field.class);
     }
 }

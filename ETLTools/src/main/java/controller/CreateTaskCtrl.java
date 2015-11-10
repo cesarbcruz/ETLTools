@@ -42,6 +42,7 @@ public abstract class CreateTaskCtrl {
             view.getDescription().setText(task.getDescription());
             view.getInitialDelay().setValue(task.getInitialDelay());
             view.getPeriod().setValue(task.getPeriod());
+            view.getActive().setSelected(task.isActive());
             setUnitSelected(task.getUnit());
             view.getButtonDelete().setEnabled(true);
         } else {
@@ -88,10 +89,10 @@ public abstract class CreateTaskCtrl {
             public void actionPerformed(ActionEvent e) {
                 
                 if (task == null) {
-                    task = new Task(view.getDescription().getText(), Long.valueOf(view.getInitialDelay().getValue().toString()), Long.valueOf(view.getPeriod().getValue().toString()), getUnitSelected());
+                    task = new Task(view.getDescription().getText(), Long.valueOf(view.getInitialDelay().getValue().toString()), Long.valueOf(view.getPeriod().getValue().toString()), getUnitSelected(), view.getActive().isSelected());
                 } else {
                     int id = task.getId();
-                    task = new Task(view.getDescription().getText(), Long.valueOf(view.getInitialDelay().getValue().toString()), Long.valueOf(view.getPeriod().getValue().toString()), getUnitSelected());
+                    task = new Task(view.getDescription().getText(), Long.valueOf(view.getInitialDelay().getValue().toString()), Long.valueOf(view.getPeriod().getValue().toString()), getUnitSelected(), view.getActive().isSelected());
                     task.setId(id);
                 }
                 try {

@@ -74,7 +74,6 @@ public class MainCtrl {
         int x = 0;
         int y = 0;
 
-
         for (int i = 0; i < frames.length; i++) {
             if (!frames[i].isIcon()) {
                 try {
@@ -238,21 +237,23 @@ public class MainCtrl {
     private void runTask(final List<Task> tasks) {
         if (tasks != null && !tasks.isEmpty()) {
             for (final Task task : tasks) {
-                new PerformerTask() {
-                    @Override
-                    public void taskEvent(final Task t) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.getLog().setText(view.getLog().getText()
-                                        .concat(new Date().toString()).concat(" - ")
-                                        .concat(view.getBundle().getString("MainGUI.messageRunTask.text"))
-                                        .concat(": ").concat(t.getDescription()).concat("\n"));
+                if (task.isActive()) {
+                    new PerformerTask() {
+                        @Override
+                        public void taskEvent(final Task t) {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.getLog().setText(view.getLog().getText()
+                                            .concat(new Date().toString()).concat(" - ")
+                                            .concat(view.getBundle().getString("MainGUI.messageRunTask.text"))
+                                            .concat(": ").concat(t.getDescription()).concat("\n"));
 
-                            }
-                        });
-                    }
-                }.execute(task);
+                                }
+                            });
+                        }
+                    }.execute(task);
+                }
             }
         }
     }

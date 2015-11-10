@@ -1,10 +1,9 @@
 package com.cesar.etltools.dominio;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
+@javax.persistence.Entity
 public class Task {
 
     @Id
@@ -14,16 +13,18 @@ public class Task {
     private long initialDelay;
     private long period;
     private String unit;
+    private boolean active;
 
     protected Task() {
     }
 
-    public Task(String description, long initialDelay, long period, String unit) {
+    public Task(String description, long initialDelay, long period, String unit, boolean active) {
         this.id = id;
         this.description = description;
         this.initialDelay = initialDelay;
         this.period = period;
         this.unit = unit;
+        this.active = active;
     }
 
     public void setDescription(String description) {
@@ -64,6 +65,14 @@ public class Task {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

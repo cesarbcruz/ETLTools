@@ -8,6 +8,7 @@ package view;
 import java.awt.Color;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -54,6 +55,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         buttonSave = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
         buttonDelete = new javax.swing.JButton();
+        active = new javax.swing.JCheckBox();
 
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -149,11 +151,22 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         getContentPane().add(jPanel1, gridBagConstraints);
 
-        setBounds(0, 0, 389, 214);
+        active.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        active.setSelected(true);
+        active.setText(bundle.getString("CreateTaskGUI.active.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        getContentPane().add(active, gridBagConstraints);
+
+        setBounds(0, 0, 401, 239);
     }// </editor-fold>//GEN-END:initComponents
 
     public JButton getButtonCancel() {
@@ -175,7 +188,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
     public JSpinner getPeriod() {
         return period;
     }
-    
+        
     public JComboBox getUnit() {
         return unit;
     }
@@ -187,9 +200,13 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
     public JButton getButtonDelete() {
         return buttonDelete;
     }
-    
+
+    public JCheckBox getActive() {
+        return active;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox active;
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonDelete;
     private javax.swing.JButton buttonSave;
