@@ -1,7 +1,10 @@
 package com.cesar.etltools.dao;
 
+import com.cesar.etltools.dominio.Destination;
 import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.Field;
+import com.cesar.etltools.dominio.Relationship;
+import com.cesar.etltools.dominio.Source;
 import com.cesar.etltools.dominio.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,6 +58,9 @@ public class CriadorDeSessao {
         return new AnnotationConfiguration()
                 .addAnnotatedClass(Task.class)
                 .addAnnotatedClass(Entity.class)
-                .addAnnotatedClass(Field.class);
+                .addAnnotatedClass(Field.class)
+                .addAnnotatedClass(Destination.class)
+                .addAnnotatedClass(Source.class)
+                .addAnnotatedClass(Relationship.class);
     }
 }
