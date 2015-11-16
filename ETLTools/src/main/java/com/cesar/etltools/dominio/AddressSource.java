@@ -11,66 +11,37 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
  * @author cesar
  */
 @javax.persistence.Entity
-public class Relationship {
+public class AddressSource {
 
     @Id
-    @GeneratedValue
-    private int id;
+    private String ip;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Source source;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Destination destination;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Entity entity;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Task task;
     private String lastKeyField;
     private Timestamp dateTimeUpdate;
 
-    public int getId() {
-        return id;
+    public String getIp() {
+        return ip;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
-    
+
     public Source getSource() {
         return source;
     }
 
     public void setSource(Source source) {
         this.source = source;
-    }
-
-    public Destination getDestination() {
-        return destination;
-    }
-
-    public void setDestination(Destination destination) {
-        this.destination = destination;
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
-    }
-
-    public Task getTask() {
-        return task;
-    }
-
-    public void setTask(Task task) {
-        this.task = task;
     }
 
     public String getLastKeyField() {
@@ -88,5 +59,8 @@ public class Relationship {
     public void setDateTimeUpdate(Timestamp dateTimeUpdate) {
         this.dateTimeUpdate = dateTimeUpdate;
     }
+
+    
+    
 
 }

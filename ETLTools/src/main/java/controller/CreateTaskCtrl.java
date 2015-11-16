@@ -73,9 +73,7 @@ public abstract class CreateTaskCtrl {
                         view.getBundle().getString("MainGUI.messageConfirmTitle.text"), view.getBundle().getString("MainGUI.messageConfirmOK.text"),
                         view.getBundle().getString("MainGUI.messageConfirmCancel.text"));
                 if (confirm) {
-                    dao.begin();
                     dao.deletar(task);
-                    dao.commit();
                     view.dispose();
                     event(dao.list());
                 }
@@ -97,13 +95,11 @@ public abstract class CreateTaskCtrl {
                 }
                 try {
                     validate(task);
-                    dao.begin();
                     if (task.getId() > 0) {
                         dao.atualizar(task);
                     } else {
                         dao.salvar(task);
                     }
-                    dao.commit();
                     Messages.information(view, view.getBundle().getString("MainGUI.messageInformationMessage.text"), view.getBundle().getString("MainGUI.messageInformationTitle.text"));
                     view.dispose();
                     event(dao.list());

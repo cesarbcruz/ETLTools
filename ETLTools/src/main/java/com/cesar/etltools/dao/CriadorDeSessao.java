@@ -3,7 +3,7 @@ package com.cesar.etltools.dao;
 import com.cesar.etltools.dominio.Destination;
 import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.Field;
-import com.cesar.etltools.dominio.Relationship;
+import com.cesar.etltools.dominio.AddressSource;
 import com.cesar.etltools.dominio.Source;
 import com.cesar.etltools.dominio.Task;
 import org.hibernate.Session;
@@ -61,6 +61,6 @@ public class CriadorDeSessao {
                 .addAnnotatedClass(Field.class)
                 .addAnnotatedClass(Destination.class)
                 .addAnnotatedClass(Source.class)
-                .addAnnotatedClass(Relationship.class);
+                .addAnnotatedClass(AddressSource.class);
     }
 }

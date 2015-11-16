@@ -5,8 +5,11 @@
  */
 package com.cesar.etltools.dominio;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @javax.persistence.Entity
 public class Source {
@@ -14,12 +17,13 @@ public class Source {
     @Id
     @GeneratedValue
     private int id;
-    private String ip;
     private String port;
     private String databaseName;
     private String user;
     private String password;
     private int tipo;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Task task;
 
     public int getId() {
         return id;
@@ -27,14 +31,6 @@ public class Source {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 
     public String getPort() {
@@ -76,6 +72,13 @@ public class Source {
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
-    
-    
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
 }

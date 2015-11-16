@@ -1,35 +1,48 @@
 package com.cesar.etltools.dao;
 
+import com.cesar.etltools.dominio.AddressSource;
+import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 
 import com.cesar.etltools.dominio.Task;
 import java.util.List;
 
-public class TaskDao {
+public class SourceDao {
 
     private final Session session;
 
-    public TaskDao(Session session) {
+    public SourceDao(Session session) {
         this.session = session;
     }
 
-    public Task porId(int id) {
-        return (Task) session.load(Task.class, id);
+    public Source porId(int id) {
+        return (Source) session.load(Source.class, id);
     }
 
-    public List<Task> porDescricao(String description) {
-        return (List<Task>) session.createQuery("from Task t where t.description = :description")
-                .setParameter("description", description).list();
+    public List<Source> porTask(Task t) {
+        return (List<Source>) session.createQuery("from Source s where task = :task")
+                .setParameter("task", t).list();
     }
 
-    public List<Task> list() {
-        return (List<Task>) session.createQuery("from Task t").list();
+    public List<Source> list() {
+        return (List<Source>) session.createQuery("from Source s").list();
     }
 
-    public void salvar(Task task) {
+    public void salvar(Source o) {
         try {
             session.getTransaction().begin();
-            session.save(task);
+            session.save(o);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void atualizar(AddressSource r) {
+        try {
+            session.getTransaction().begin();
+            session.merge(r);
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
@@ -38,25 +51,15 @@ public class TaskDao {
 
     }
 
-    public void atualizar(Task task) {
+    public void deletar(Source s) {
         try {
             session.getTransaction().begin();
-            session.merge(task);
+            session.delete(s);
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-    }
 
-    public void deletar(Task task) {
-        try {
-            session.getTransaction().begin();
-            session.delete(task);
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw new RuntimeException(ex);
-        }
     }
 }

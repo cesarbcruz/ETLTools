@@ -22,8 +22,7 @@ public class Field {
     @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Entity entity;
 
-    public Field(int id, String nameFieldSource, String nameFieldDestination, Entity entity) {
-        this.id = id;
+    public Field(String nameFieldSource, String nameFieldDestination, Entity entity) {
         this.nameFieldSource = nameFieldSource;
         this.nameFieldDestination = nameFieldDestination;
         this.entity = entity;

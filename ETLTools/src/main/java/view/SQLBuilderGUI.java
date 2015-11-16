@@ -564,8 +564,10 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         return userSource;
     }
 
-    
-    
+    public JButton getSave() {
+        return save;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboTask;
     private javax.swing.JButton connect;

@@ -1,0 +1,40 @@
+/*C2*/SET SCHEMA PUBLIC
+\u000a    create table AddressSource (\u000a        ip varchar(255) not null,\u000a        dateTimeUpdate timestamp,\u000a        lastKeyField varchar(255),\u000a        source_id integer,\u000a        primary key (ip)\u000a    )
+\u000a    alter table Destination \u000a        add column source_id integer
+\u000a    alter table Entity \u000a        add column source_id integer
+\u000a    alter table Source \u000a        add column task_id integer
+\u000a    alter table AddressSource \u000a        add constraint FK_8gig2215d3l4xvfgs1r7a398c \u000a        foreign key (source_id) \u000a        references Source
+\u000a    alter table Destination \u000a        add constraint FK_155sxgg8m5w604tsra6sem35j \u000a        foreign key (source_id) \u000a        references Source
+\u000a    alter table Entity \u000a        add constraint FK_md0khnxpltdksabx7qihfmjps \u000a        foreign key (source_id) \u000a        references Source
+\u000a    alter table Source \u000a        add constraint FK_m0mwow00gxx5lt6ue70m9tkxd \u000a        foreign key (task_id) \u000a        references Task
+/*C4*/SET SCHEMA PUBLIC
+INSERT INTO SOURCE VALUES(2,'PDV',NULL,'','3306',2,'root',1)
+DELETE FROM TASK WHERE ID=1
+INSERT INTO TASK VALUES(1,TRUE,'mover vendas PDV',1,1,'SECONDS')
+COMMIT
+/*C5*/SET SCHEMA PUBLIC
+INSERT INTO ADDRESSSOURCE VALUES('127.0.0.1',NULL,NULL,2)
+DELETE FROM SOURCE WHERE ID=2
+INSERT INTO SOURCE VALUES(2,'PDV',NULL,'','3306',2,'root',1)
+DELETE FROM TASK WHERE ID=1
+INSERT INTO TASK VALUES(1,TRUE,'mover vendas PDV',1,1,'SECONDS')
+COMMIT
+/*C6*/SET SCHEMA PUBLIC
+INSERT INTO DESTINATION VALUES(2,'venda','127.0.0.1','postgres','5432',1,'postgres',2)
+DELETE FROM SOURCE WHERE ID=2
+INSERT INTO SOURCE VALUES(2,'PDV',NULL,'','3306',2,'root',1)
+DELETE FROM TASK WHERE ID=1
+INSERT INTO TASK VALUES(1,TRUE,'mover vendas PDV',1,1,'SECONDS')
+COMMIT
+/*C7*/SET SCHEMA PUBLIC
+INSERT INTO ENTITY VALUES(2,'','public.auditoriapos','ECF_CONFIG_CHEQUE','Item 1',2)
+DELETE FROM SOURCE WHERE ID=2
+INSERT INTO SOURCE VALUES(2,'PDV',NULL,'','3306',2,'root',1)
+DELETE FROM TASK WHERE ID=1
+INSERT INTO TASK VALUES(1,TRUE,'mover vendas PDV',1,1,'SECONDS')
+COMMIT
+/*C9*/SET SCHEMA PUBLIC
+INSERT INTO SOURCE VALUES(3,'PDV',NULL,'','3306',2,'root',1)
+DELETE FROM TASK WHERE ID=1
+INSERT INTO TASK VALUES(1,TRUE,'mover vendas PDV',1,1,'SECONDS')
+COMMIT

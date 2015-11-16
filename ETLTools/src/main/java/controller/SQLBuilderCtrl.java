@@ -5,9 +5,17 @@
  */
 package controller;
 
+import com.cesar.etltools.dao.AddressSourceDao;
 import com.cesar.etltools.dao.CriadorDeSessao;
+import com.cesar.etltools.dao.DestinationDao;
+import com.cesar.etltools.dao.EntityDao;
+import com.cesar.etltools.dao.SourceDao;
 import com.cesar.etltools.dao.TaskDao;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
+import com.cesar.etltools.dominio.Destination;
+import com.cesar.etltools.dominio.Entity;
+import com.cesar.etltools.dominio.AddressSource;
+import com.cesar.etltools.dominio.Source;
 import com.cesar.etltools.dominio.Task;
 import com.cesar.etltools.model.ButtonColumn;
 import com.cesar.etltools.model.ParamDatabase;
@@ -26,6 +34,7 @@ import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -49,18 +58,30 @@ public class SQLBuilderCtrl {
     private BalloonTip b6;
     DetailRelationshipGUI viewDetail;
     JFrame parentRootFrame;
+    SourceDao daoSource;
+    DestinationDao daoDestination;
+    AddressSourceDao daoAddress;
+    private Source source;
+    private Destination destination;
+    private EntityDao entityDao;
 
     public SQLBuilderCtrl(JFrame parentRootFrame) {
         this.parentRootFrame = parentRootFrame;
         view = new SQLBuilderGUI(this);
         viewDetail = new DetailRelationshipGUI(parentRootFrame, true, this);
         addActionButtonConnect();
+        addActionButtonSave();
+        addActionCloseDetail();
         loadComboSgdb();
         configureBaloonTip();
         configureListTransfer();
         configureListTransferDetail();
         loadComboTask();
         configureTableRelationship();
+        daoSource = new SourceDao(new CriadorDeSessao().getSession());
+        daoDestination = new DestinationDao(new CriadorDeSessao().getSession());
+        daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
+        entityDao = new EntityDao(new CriadorDeSessao().getSession());
     }
 
     private void configureBaloonTip() {
@@ -92,6 +113,14 @@ public class SQLBuilderCtrl {
         view.getComboTask().setModel(model);
     }
 
+    private void loadComboFieldKey(List<String> fields) {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        for (String field : fields) {
+            model.addElement(field);
+        }
+        viewDetail.getFieldKey().setModel(model);
+    }
+
     public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
         connectSourceDatabase();
         connectDestinationDatabase();
@@ -112,6 +141,74 @@ public class SQLBuilderCtrl {
                 } catch (ClassNotFoundException | SQLException | CloneNotSupportedException ex) {
                     throw new RuntimeException(ex);
                 }
+            }
+        });
+    }
+
+    private void addActionCloseDetail() {
+        viewDetail.getClose().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewDetail.dispose();
+            }
+        });
+    }
+
+    private void addActionButtonSave() {
+        view.getSave().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (source == null || source.getId() == 0) {
+                    source = new Source();
+                }
+
+                Task t = (Task) view.getComboTask().getSelectedItem();
+
+                source.setPort(view.getPortSource().getText());
+                source.setDatabaseName(view.getDatabaseSource().getText());
+                source.setUser(view.getUserSource().getText());
+                source.setPassword(new String(view.getPasswordSource().getPassword()));
+                source.setTipo(((SGDB) view.getSgbdSource().getSelectedItem()).getId());
+                source.setTask(t);
+
+                daoSource.salvar(source);
+
+                AddressSource addressSource = new AddressSource();
+                addressSource.setIp(view.getIphostSource().getText());
+                addressSource.setSource(source);
+
+                daoAddress.salvar(addressSource);
+
+                if (destination == null || destination.getId() == 0) {
+                    destination = new Destination();
+                }
+                destination.setIp(view.getIphostDestination().getText());
+                destination.setPort(view.getPortDestination().getText());
+                destination.setDatabaseName(view.getDatabaseDestination().getText());
+                destination.setUser(view.getUserDestination().getText());
+                destination.setPassword(new String(view.getPasswordDestination().getPassword()));
+                destination.setTipo(((SGDB) view.getSgbdDestination().getSelectedItem()).getId());
+                destination.setSource(source);
+
+                daoDestination.salvar(destination);
+
+                for (int l = 0; l < view.getTableRelationship().getRowCount(); l++) {
+                    Entity entity = new Entity();
+                    entity.setEntitySource(view.getTableRelationship().getValueAt(l, 0).toString());
+                    entity.setNameKeySource(viewDetail.getFieldKey().getSelectedItem().toString());
+                    entity.setConditionSource(viewDetail.getQueryCondition().getText());
+                    entity.setEntityDestination(view.getTableRelationship().getValueAt(l, 1).toString());
+                    entity.setSource(source);
+                    entityDao.salvar(entity);
+//                    for (l = 0; l < viewDetail.getTableRelationship().getRowCount(); l++) {
+//                        Field field = new Field(viewDetail.getTableRelationship().getValueAt(l, 0).toString(),
+//                                viewDetail.getTableRelationship().getValueAt(l, 1).toString(),
+//                                entity);
+//                    }
+                }
+
+                JOptionPane.showMessageDialog(parentRootFrame, "Dados salvos com sucesso!");
             }
         });
     }
@@ -300,7 +397,9 @@ public class SQLBuilderCtrl {
         for (String field : fieldsSource) {
             model.add(field);
         }
+        loadComboFieldKey(fieldsSource);
         viewDetail.getListFieldSource().setModel(model);
+        ((DefaultTableModel) viewDetail.getTableRelationship().getModel()).setRowCount(0);
 
         param = new ParamDatabase((SGDB) view.getSgbdDestination().getSelectedItem(), view.getIphostDestination().getText(), view.getPortDestination().getText(), view.getUserDestination().getText(), new String(view.getPasswordDestination().getPassword()), view.getDatabaseDestination().getText());
         model = new SortedListModel();

@@ -7,10 +7,12 @@ package view;
 
 import controller.SQLBuilderCtrl;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /**
  *
@@ -29,8 +31,8 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         this.presenter = presenter;
     }
 
-    public JButton getSaveDetail() {
-        return saveDetail;
+    public JButton getClose() {
+        return close;
     }
 
     public JList getListFieldSource() {
@@ -61,6 +63,13 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         return status;
     }
 
+    public JTextField getQueryCondition() {
+        return queryCondition;
+    }
+
+    public JComboBox getFieldKey() {
+        return fieldKey;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,8 +87,13 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         tableRelationship = new javax.swing.JTable();
         scrollFieldsDestination = new javax.swing.JScrollPane();
         listFieldDestination = new javax.swing.JList();
-        saveDetail = new javax.swing.JButton();
+        close = new javax.swing.JButton();
         status = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        queryCondition = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        fieldKey = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("language/Bundle_pt_BR"); // NOI18N
@@ -93,7 +107,7 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -126,7 +140,7 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -139,19 +153,19 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         getContentPane().add(scrollFieldsDestination, gridBagConstraints);
 
-        saveDetail.setText(bundle.getString("DetailRelationshipGUI.saveDetail.text")); // NOI18N
+        close.setText(bundle.getString("DetailRelationshipGUI.close.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        getContentPane().add(saveDetail, gridBagConstraints);
+        getContentPane().add(close, gridBagConstraints);
 
         status.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         status.setForeground(java.awt.Color.blue);
@@ -165,6 +179,55 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(status, gridBagConstraints);
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        queryCondition.setText(bundle.getString("DetailRelationshipGUI.queryCondition.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(queryCondition, gridBagConstraints);
+
+        jLabel2.setText(bundle.getString("DetailRelationshipGUI.jLabel2.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(jLabel2, gridBagConstraints);
+
+        fieldKey.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(fieldKey, gridBagConstraints);
+
+        jLabel1.setText(bundle.getString("DetailRelationshipGUI.jLabel1.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(jLabel1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        getContentPane().add(jPanel1, gridBagConstraints);
 
         setSize(new java.awt.Dimension(799, 422));
         setLocationRelativeTo(null);
@@ -213,9 +276,14 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton close;
+    private javax.swing.JComboBox fieldKey;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JList listFieldDestination;
     private javax.swing.JList listFieldSource;
-    private javax.swing.JButton saveDetail;
+    private javax.swing.JTextField queryCondition;
     private javax.swing.JScrollPane scrollFieldsDestination;
     private javax.swing.JScrollPane scrollFieldsSource;
     private javax.swing.JScrollPane scrollTableRelationship;
