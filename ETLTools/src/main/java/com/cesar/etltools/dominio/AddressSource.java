@@ -22,12 +22,24 @@ import org.hibernate.annotations.OnDeleteAction;
 public class AddressSource {
 
     @Id
+    @GeneratedValue
+    private int id;
     private String ip;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Source source;
     private String lastKeyField;
     private Timestamp dateTimeUpdate;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
+    
     public String getIp() {
         return ip;
     }
@@ -59,8 +71,5 @@ public class AddressSource {
     public void setDateTimeUpdate(Timestamp dateTimeUpdate) {
         this.dateTimeUpdate = dateTimeUpdate;
     }
-
-    
-    
 
 }

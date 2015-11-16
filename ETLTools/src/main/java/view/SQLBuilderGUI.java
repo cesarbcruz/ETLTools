@@ -534,7 +534,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
 
     public JScrollPane getScrollTableRelationship() {
         return scrollTableRelationship;
-    }    
+    }
 
     public JFormattedTextField getPortSource() {
         return portSource;

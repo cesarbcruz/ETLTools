@@ -9,15 +9,18 @@ import com.cesar.etltools.dao.AddressSourceDao;
 import com.cesar.etltools.dao.CriadorDeSessao;
 import com.cesar.etltools.dao.DestinationDao;
 import com.cesar.etltools.dao.EntityDao;
+import com.cesar.etltools.dao.FieldDao;
 import com.cesar.etltools.dao.SourceDao;
 import com.cesar.etltools.dao.TaskDao;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
 import com.cesar.etltools.dominio.Destination;
 import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.AddressSource;
+import com.cesar.etltools.dominio.Field;
 import com.cesar.etltools.dominio.Source;
 import com.cesar.etltools.dominio.Task;
 import com.cesar.etltools.model.ButtonColumn;
+import com.cesar.etltools.model.DetailsModel;
 import com.cesar.etltools.model.ParamDatabase;
 import com.cesar.etltools.model.SGDB;
 import com.cesar.etltools.model.SortedListModel;
@@ -64,6 +67,7 @@ public class SQLBuilderCtrl {
     private Source source;
     private Destination destination;
     private EntityDao entityDao;
+    private FieldDao fieldDao;
 
     public SQLBuilderCtrl(JFrame parentRootFrame) {
         this.parentRootFrame = parentRootFrame;
@@ -82,6 +86,7 @@ public class SQLBuilderCtrl {
         daoDestination = new DestinationDao(new CriadorDeSessao().getSession());
         daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
         entityDao = new EntityDao(new CriadorDeSessao().getSession());
+        fieldDao = new FieldDao(new CriadorDeSessao().getSession());
     }
 
     private void configureBaloonTip() {
@@ -201,11 +206,12 @@ public class SQLBuilderCtrl {
                     entity.setEntityDestination(view.getTableRelationship().getValueAt(l, 1).toString());
                     entity.setSource(source);
                     entityDao.salvar(entity);
-//                    for (l = 0; l < viewDetail.getTableRelationship().getRowCount(); l++) {
-//                        Field field = new Field(viewDetail.getTableRelationship().getValueAt(l, 0).toString(),
-//                                viewDetail.getTableRelationship().getValueAt(l, 1).toString(),
-//                                entity);
-//                    }
+                    
+                    DetailsModel details = (DetailsModel)view.getTableRelationship().getValueAt(l, 2);
+                    for (Object detail : details.getFields()) {
+                        fieldDao.salvar((Field)detail);
+                    }
+                    
                 }
 
                 JOptionPane.showMessageDialog(parentRootFrame, "Dados salvos com sucesso!");
@@ -339,7 +345,7 @@ public class SQLBuilderCtrl {
             }
         }
         if (!columnEmpty) {
-            ((DefaultTableModel) t.getModel()).addRow(new Object[]{"", ""});
+            ((DefaultTableModel) t.getModel()).addRow(new Object[]{"", "", new DetailsModel(), ""});
         }
     }
 
@@ -366,7 +372,7 @@ public class SQLBuilderCtrl {
                 JTable table = (JTable) e.getSource();
                 int modelRow = Integer.valueOf(e.getActionCommand());
                 try {
-                    showDetail(table.getValueAt(modelRow, 0).toString(), table.getValueAt(modelRow, 1).toString());
+                    showDetail(table.getValueAt(modelRow, 0).toString(), table.getValueAt(modelRow, 1).toString(), (DetailsModel) table.getValueAt(modelRow, 2));
                 } catch (ClassNotFoundException | SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -379,7 +385,7 @@ public class SQLBuilderCtrl {
         buttonColumn.setMnemonic(KeyEvent.VK_E);
     }
 
-    private void showDetail(String tableSource, String tableDestination) throws ClassNotFoundException, SQLException {
+    private void showDetail(String tableSource, String tableDestination, DetailsModel detail) throws ClassNotFoundException, SQLException {
 
         if (tableSource == null || tableSource.isEmpty()) {
             throw new InvalidParameterException("A tabela de origem não foi selecionada!");
@@ -411,5 +417,12 @@ public class SQLBuilderCtrl {
         viewDetail.getStatus().setText("<html>Mapeamento campo a campo entre as tabelas:"
                 + "<br>" + tableSource + " (" + view.getSgbdSource().getSelectedItem() + ")<br>" + tableDestination + "(" + view.getSgbdDestination().getSelectedItem() + ")</html>");
         viewDetail.setVisible(true);
+
+        detail.getFields().clear();
+        for (int i = 0; i < viewDetail.getTableRelationship().getRowCount(); i++) {
+            Field field = new Field(viewDetail.getTableRelationship().getValueAt(i, 0).toString(), viewDetail.getTableRelationship().getValueAt(i, 1).toString(), null);
+            detail.getFields().add(field);
+        }
+        view.getTableRelationship().repaint();
     }
 }

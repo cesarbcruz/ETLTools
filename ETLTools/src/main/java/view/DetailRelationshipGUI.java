@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 public class DetailRelationshipGUI extends javax.swing.JDialog {
 
     SQLBuilderCtrl presenter;
-
+    
     /**
      * Creates new form DetailRelationshipGUI
      */
