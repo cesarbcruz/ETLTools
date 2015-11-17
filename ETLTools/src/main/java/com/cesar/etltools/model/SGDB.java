@@ -11,9 +11,9 @@ package com.cesar.etltools.model;
  */
 public enum SGDB {
 
-    POSTGRES(1,"PostgreSQL","org.postgresql.Driver","jdbc:postgresql://"),
-    MYSQL(2,"MySQL","com.mysql.jdbc.Driver","jdbc:mysql://");
-        
+    POSTGRES(1, "PostgreSQL", "org.postgresql.Driver", "jdbc:postgresql://"),
+    MYSQL(2, "MySQL", "com.mysql.jdbc.Driver", "jdbc:mysql://");
+
     private final int id;
     private final String description;
     private final String driver;
@@ -45,6 +45,15 @@ public enum SGDB {
     @Override
     public String toString() {
         return this.description;
+    }
+
+    public static SGDB byID(int id) {
+        for (SGDB sgdb : SGDB.values()) {
+            if (sgdb.getId() == id) {
+                return sgdb;
+            }
+        }
+        return null;
     }
 
 }

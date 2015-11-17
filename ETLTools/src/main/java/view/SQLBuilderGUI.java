@@ -45,7 +45,8 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         passwordSource = new javax.swing.JPasswordField();
-        iphostSource = new javax.swing.JFormattedTextField();
+        iphostSource = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         scrollTablesSource = new javax.swing.JScrollPane();
         listTableSource = new javax.swing.JList();
@@ -97,7 +98,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         portSource.setText(bundle.getString("SQLBuilderGUI.portSource.text")); // NOI18N
         portSource.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -119,7 +120,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jLabel2.setText(bundle.getString("SQLBuilderGUI.jLabel2.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -139,6 +140,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jLabel3, gridBagConstraints);
@@ -148,6 +150,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -190,15 +193,20 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(passwordSource, gridBagConstraints);
 
-        iphostSource.setText(bundle.getString("SQLBuilderGUI.iphostSource.text")); // NOI18N
-        iphostSource.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(iphostSource, gridBagConstraints);
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/edit.png"))); // NOI18N
+        jButton1.setText(bundle.getString("SQLBuilderGUI.jButton1.text")); // NOI18N
+        jButton1.setPreferredSize(new java.awt.Dimension(44, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        jPanel1.add(jButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -500,7 +508,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         return iphostDestination;
     }
 
-    public JFormattedTextField getIphostSource() {
+    public JComboBox getIphostSource() {
         return iphostSource;
     }
 
@@ -574,7 +582,8 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
     private javax.swing.JFormattedTextField databaseDestination;
     private javax.swing.JFormattedTextField databaseSource;
     private javax.swing.JFormattedTextField iphostDestination;
-    private javax.swing.JFormattedTextField iphostSource;
+    private javax.swing.JComboBox iphostSource;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

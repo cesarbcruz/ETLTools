@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -38,8 +36,6 @@ public class AddressSource {
         this.id = id;
     }
 
-    
-    
     public String getIp() {
         return ip;
     }
@@ -72,4 +68,8 @@ public class AddressSource {
         this.dateTimeUpdate = dateTimeUpdate;
     }
 
+    @Override
+    public String toString() {
+        return ip;
+    }
 }

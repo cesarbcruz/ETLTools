@@ -29,7 +29,11 @@ public class TaskDao {
     public void salvar(Task task) {
         try {
             session.getTransaction().begin();
-            session.save(task);
+            if(task.getId()>0){
+                session.merge(task);                
+            }else{
+                session.save(task);                
+            }
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
@@ -37,18 +41,6 @@ public class TaskDao {
         }
 
     }
-
-    public void atualizar(Task task) {
-        try {
-            session.getTransaction().begin();
-            session.merge(task);
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw new RuntimeException(ex);
-        }
-    }
-
     public void deletar(Task task) {
         try {
             session.getTransaction().begin();

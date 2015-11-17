@@ -22,11 +22,11 @@ import view.CreateTaskGUI;
  * @author cesar
  */
 public abstract class CreateTaskCtrl {
-    
+
     CreateTaskGUI view;
     TaskDao dao;
     Task task;
-    
+
     public CreateTaskCtrl(ResourceBundle bundle, TaskDao dao) {
         view = new CreateTaskGUI(bundle);
         this.dao = dao;
@@ -35,7 +35,7 @@ public abstract class CreateTaskCtrl {
         createComboUnit();
         addActionButtonDelete();
     }
-    
+
     public void setTask(Task t) {
         task = t;
         if (task != null) {
@@ -49,13 +49,13 @@ public abstract class CreateTaskCtrl {
             view.getButtonDelete().setEnabled(false);
         }
     }
-    
+
     public JInternalFrame getView() {
         return view;
     }
-    
+
     public abstract void event(List<Task> tasks);
-    
+
     private void addActionButtonCancel() {
         view.getButtonCancel().addActionListener(new ActionListener() {
             @Override
@@ -64,7 +64,7 @@ public abstract class CreateTaskCtrl {
             }
         });
     }
-    
+
     private void addActionButtonDelete() {
         view.getButtonDelete().addActionListener(new ActionListener() {
             @Override
@@ -80,12 +80,12 @@ public abstract class CreateTaskCtrl {
             }
         });
     }
-    
+
     private void addActionButtonSave() {
         view.getButtonSave().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 if (task == null) {
                     task = new Task(view.getDescription().getText(), Long.valueOf(view.getInitialDelay().getValue().toString()), Long.valueOf(view.getPeriod().getValue().toString()), getUnitSelected(), view.getActive().isSelected());
                 } else {
@@ -95,11 +95,7 @@ public abstract class CreateTaskCtrl {
                 }
                 try {
                     validate(task);
-                    if (task.getId() > 0) {
-                        dao.atualizar(task);
-                    } else {
-                        dao.salvar(task);
-                    }
+                    dao.salvar(task);
                     Messages.information(view, view.getBundle().getString("MainGUI.messageInformationMessage.text"), view.getBundle().getString("MainGUI.messageInformationTitle.text"));
                     view.dispose();
                     event(dao.list());
@@ -109,22 +105,22 @@ public abstract class CreateTaskCtrl {
             }
         });
     }
-    
+
     private void validate(Task task) throws Exception {
         StringBuilder error = new StringBuilder();
         if (task.getDescription() == null || task.getDescription().trim().isEmpty()) {
             error.append(view.getBundle().getString("CreateTaskGUI.messageErrordescription.text"));
         }
-        
+
         if (task.getInitialDelay() <= 0) {
             error.append("\n").append(view.getBundle().getString("CreateTaskGUI.messageErrorInitialDelay.text"));
         }
-        
+
         if (!error.toString().isEmpty()) {
             throw new Exception(error.toString());
         }
     }
-    
+
     private String getUnitSelected() {
         int index = view.getUnit().getSelectedIndex();
         switch (index) {
@@ -138,7 +134,7 @@ public abstract class CreateTaskCtrl {
                 return TimeUnit.SECONDS.toString();
         }
     }
-    
+
     private void setUnitSelected(String unit) {
         switch (unit) {
             case "DAYS":
@@ -155,7 +151,7 @@ public abstract class CreateTaskCtrl {
                 break;
         }
     }
-    
+
     private void createComboUnit() {
         view.getUnit().setModel(new DefaultComboBoxModel(new String[]{
             view.getBundle().getString("CreateTaskGUI.unitOption1.text"),
@@ -164,5 +160,5 @@ public abstract class CreateTaskCtrl {
             view.getBundle().getString("CreateTaskGUI.unitOption4.text")
         }));
     }
-    
+
 }

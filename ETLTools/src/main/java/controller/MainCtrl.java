@@ -18,8 +18,10 @@ import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import util.ExceptionHandler;
 import util.Messages;
@@ -215,12 +217,16 @@ public class MainCtrl {
                 showSQLBuilder();
             }
         });
-
     }
 
     private void showSQLBuilder() {
         SQLBuilderCtrl sqlBuilder = new SQLBuilderCtrl(view);
-        showInternalFrame(sqlBuilder.getView(), view.getButtonSQLBuilder().getText());
+        if (view.getList().getSelectedValue() != null) {
+            sqlBuilder.setup((Task) view.getList().getSelectedValue());
+            showInternalFrame(sqlBuilder.getView(), view.getButtonSQLBuilder().getText());
+        } else {
+            new JOptionPane().showMessageDialog(view, "É necessário selecionar uma tarefa!");
+        }
     }
 
     private void showCreateTask(Task t) {

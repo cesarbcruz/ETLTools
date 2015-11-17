@@ -4,7 +4,6 @@ import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 
-import com.cesar.etltools.dominio.Task;
 import java.util.List;
 
 public class EntityDao {
@@ -54,10 +53,17 @@ public class EntityDao {
         }
     }
 
-    public void deletarBySource(Source s) {
+    public void deleteBySource(Source s) {
         try {
             session.getTransaction().begin();
-            session.createQuery("delete from Entity where source.id= :sourceId").setInteger("sourceId", s.getId()).executeUpdate();
+            List<Entity> entitys = (List<Entity>) session.createQuery("from Entity e where source = :source")
+                    .setParameter("source", s).list();
+            for (Entity e : entitys) {
+                session.createQuery("DELETE FROM Field e where entity = :entity")
+                        .setParameter("entity", e).executeUpdate();
+            }
+            session.createQuery("DELETE FROM Entity e where source = :source")
+                    .setParameter("source", s).executeUpdate();
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();

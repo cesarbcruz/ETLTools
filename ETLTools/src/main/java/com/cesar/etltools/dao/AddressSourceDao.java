@@ -1,9 +1,9 @@
 package com.cesar.etltools.dao;
 
 import com.cesar.etltools.dominio.AddressSource;
+import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 
-import com.cesar.etltools.dominio.Task;
 import java.util.List;
 
 public class AddressSourceDao {
@@ -18,9 +18,9 @@ public class AddressSourceDao {
         return (AddressSource) session.load(AddressSource.class, id);
     }
 
-    public List< AddressSource> porTask(Task t) {
-        return (List< AddressSource>) session.createQuery("from  AddressSource a where task = :task")
-                .setParameter("task", t).list();
+    public List< AddressSource> bySource(Source s) {
+        return (List< AddressSource>) session.createQuery("from  AddressSource a where source = :source")
+                .setParameter("source", s).list();
     }
 
     public List< AddressSource> list() {
@@ -40,17 +40,5 @@ public class AddressSourceDao {
             session.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-    }
-    
-    public void deletar(AddressSource a) {
-        try {
-            session.getTransaction().begin();
-            session.delete(a);
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw new RuntimeException(ex);
-        }
-
     }
 }

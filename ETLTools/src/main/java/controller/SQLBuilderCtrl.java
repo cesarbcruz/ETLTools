@@ -50,7 +50,7 @@ import view.SQLBuilderGUI;
  * @author cesar
  */
 public class SQLBuilderCtrl {
-
+    
     SQLBuilderGUI view;
     private BalloonTip b1;
     private BalloonTip b2;
@@ -66,22 +66,24 @@ public class SQLBuilderCtrl {
     private Source source;
     private Destination destination;
     private EntityDao entityDao;
-    private AddressSource addressSource;
-    private List<Entity> entitys;
-
+    
     public SQLBuilderCtrl(JFrame parentRootFrame) {
         this.parentRootFrame = parentRootFrame;
         construct();
     }
-
-    public void openEdit(Task t) {
+    
+    public void setup(Task t) {
         view.getComboTask().setSelectedItem(t);
         source = daoSource.byTask(t);
-        destination = daoDestination.bySource(source);
-        entitys = entityDao.bySource(source);
-        view.setVisible(true);
+        if (source != null) {
+            fillDataSource(source);
+            destination = daoDestination.bySource(source);
+            if(destination!=null){
+                fillDataDestination(destination);
+            }
+        }
     }
-
+    
     private void configureBaloonTip() {
         b1 = new BalloonTip(view.getScrollTablesSource(), "<html>Primeiro selecione uma tabela de origem<br>e arraste para o relacionamento<br></html>", new EdgedBalloonStyle(Color.WHITE, Color.BLUE), true);
         b1.setVisible(false);
@@ -96,11 +98,11 @@ public class SQLBuilderCtrl {
         b6 = new BalloonTip(viewDetail.getScrollTableRelationship(), "<html>Para desfazer o relacionamento,<br>arraste o campo para sua respectiva lista</html>", new EdgedBalloonStyle(Color.WHITE, Color.BLUE), true);
         b6.setVisible(false);
     }
-
+    
     public JInternalFrame getView() {
         return view;
     }
-
+    
     private void loadComboTask() {
         TaskDao taskDao = new TaskDao(new CriadorDeSessao().getSession());
         List<Task> tasks = taskDao.list();
@@ -110,7 +112,7 @@ public class SQLBuilderCtrl {
         }
         view.getComboTask().setModel(model);
     }
-
+    
     private void loadComboFieldKey(List<String> fields) {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for (String field : fields) {
@@ -118,17 +120,17 @@ public class SQLBuilderCtrl {
         }
         viewDetail.getFieldKey().setModel(model);
     }
-
+    
     public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
         connectSourceDatabase();
         connectDestinationDatabase();
     }
-
+    
     private void loadComboSgdb() {
         view.getSgbdSource().setModel(new DefaultComboBoxModel(SGDB.values()));
         view.getSgbdDestination().setModel(new DefaultComboBoxModel(SGDB.values()));
     }
-
+    
     private void addActionButtonConnect() {
         view.getConnect().addActionListener(new ActionListener() {
             @Override
@@ -142,7 +144,7 @@ public class SQLBuilderCtrl {
             }
         });
     }
-
+    
     private void addActionCloseDetail() {
         viewDetail.getClose().addActionListener(new ActionListener() {
             @Override
@@ -151,7 +153,7 @@ public class SQLBuilderCtrl {
             }
         });
     }
-
+    
     private void addActionButtonSave() {
         view.getSave().addActionListener(new ActionListener() {
             @Override
@@ -159,26 +161,24 @@ public class SQLBuilderCtrl {
                 if (source == null) {
                     source = new Source();
                 }
-
+                
                 Task t = (Task) view.getComboTask().getSelectedItem();
-
+                
                 source.setPort(view.getPortSource().getText());
                 source.setDatabaseName(view.getDatabaseSource().getText());
                 source.setUser(view.getUserSource().getText());
                 source.setPassword(new String(view.getPasswordSource().getPassword()));
                 source.setTipo(((SGDB) view.getSgbdSource().getSelectedItem()).getId());
                 source.setTask(t);
-
+                
                 daoSource.salvar(source);
-
-                if (addressSource == null) {
-                    addressSource = new AddressSource();
+                
+                for (int i = 0; i < view.getIphostSource().getItemCount(); i++) {
+                    AddressSource addressSource = (AddressSource) view.getIphostSource().getItemAt(i);
+                    addressSource.setSource(source);
+                    daoAddress.salvar(addressSource);
                 }
-                addressSource.setIp(view.getIphostSource().getText());
-                addressSource.setSource(source);
-
-                daoAddress.salvar(addressSource);
-
+                
                 if (destination == null) {
                     destination = new Destination();
                 }
@@ -189,11 +189,11 @@ public class SQLBuilderCtrl {
                 destination.setPassword(new String(view.getPasswordDestination().getPassword()));
                 destination.setTipo(((SGDB) view.getSgbdDestination().getSelectedItem()).getId());
                 destination.setSource(source);
-
+                
                 daoDestination.salvar(destination);
-
-                entityDao.deletarBySource(source);
-
+                
+                entityDao.deleteBySource(source);
+                
                 for (int l = 0; l < view.getTableRelationship().getRowCount(); l++) {
                     Entity entity = new Entity();
                     entity.setEntitySource(view.getTableRelationship().getValueAt(l, 0).toString());
@@ -202,55 +202,59 @@ public class SQLBuilderCtrl {
                     entity.setEntityDestination(view.getTableRelationship().getValueAt(l, 1).toString());
                     entity.setSource(source);
                     DetailsModel details = (DetailsModel) view.getTableRelationship().getValueAt(l, 2);
-                    entity.setFields(details.getFields());
+                    for (Field field : details.getFields()) {
+                        field.setEntity(entity);
+                    }
+                    entity.setField(details.getFields());
                     entityDao.salvar(entity);
-
+                    
                 }
                 JOptionPane.showMessageDialog(parentRootFrame, "Dados salvos com sucesso!");
+                view.dispose();
             }
         });
     }
-
+    
     private void configureListTransfer() {
         view.getListTableSource().setDragEnabled(true);
         view.getListTableSource().setName("0");
         view.getListTableSource().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
                 checkJtable(view.getTableRelationship(), Integer.parseInt(view.getListTableSource().getName()));
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(view.getTableRelationship(), b3);
             }
-
+            
         });
-
+        
         view.getListTableDestination().setDragEnabled(true);
         view.getListTableDestination().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
                 checkJtable(view.getTableRelationship(), Integer.parseInt(view.getListTableDestination().getName()));
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(view.getTableRelationship(), b3);
             }
         });
         view.getListTableDestination().setName("1");
-
+        
         view.getTableRelationship().setDragEnabled(true);
         view.getTableRelationship().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
-
+                
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(view.getTableRelationship(), b3);
@@ -258,47 +262,47 @@ public class SQLBuilderCtrl {
         });
         view.getTableRelationship().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
-
+    
     private void configureListTransferDetail() {
         viewDetail.getListFieldSource().setDragEnabled(true);
         viewDetail.getListFieldSource().setName("0");
         viewDetail.getListFieldSource().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
                 checkJtable(viewDetail.getTableRelationship(), Integer.parseInt(viewDetail.getListFieldSource().getName()));
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
             }
-
+            
         });
-
+        
         viewDetail.getListFieldDestination().setDragEnabled(true);
         viewDetail.getListFieldDestination().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
                 checkJtable(viewDetail.getTableRelationship(), Integer.parseInt(viewDetail.getListFieldDestination().getName()));
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
             }
         });
         viewDetail.getListFieldDestination().setName("1");
-
+        
         viewDetail.getTableRelationship().setDragEnabled(true);
         viewDetail.getTableRelationship().setTransferHandler(new ListTransferHandler() {
-
+            
             @Override
             void eventExportJList() {
-
+                
             }
-
+            
             @Override
             void eventCleanup() {
                 cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
@@ -306,18 +310,23 @@ public class SQLBuilderCtrl {
         });
         viewDetail.getTableRelationship().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
-
+    
     private void connectSourceDatabase() throws SQLException, ClassNotFoundException {
-        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), view.getIphostSource().getText(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
-        SortedListModel model = new SortedListModel();
-        List<String> tables = DatabaseFactory.getDatabase(param).listTables();
-        for (String tableName : tables) {
-            model.add(tableName);
+        
+        if (view.getIphostSource().getSelectedIndex() < 0) {
+            JOptionPane.showMessageDialog(parentRootFrame, "O IP de Origem deve ser informado!");
+        } else {
+            ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), ((AddressSource) view.getIphostSource().getSelectedItem()).getIp(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
+            SortedListModel model = new SortedListModel();
+            List<String> tables = DatabaseFactory.getDatabase(param).listTables();
+            for (String tableName : tables) {
+                model.add(tableName);
+            }
+            view.getListTableSource().setModel(model);
+            b1.setVisible(true);
         }
-        view.getListTableSource().setModel(model);
-        b1.setVisible(true);
     }
-
+    
     private void connectDestinationDatabase() throws SQLException, ClassNotFoundException {
         ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdDestination().getSelectedItem(), view.getIphostDestination().getText(), view.getPortDestination().getText(), view.getUserDestination().getText(), new String(view.getPasswordDestination().getPassword()), view.getDatabaseDestination().getText());
         SortedListModel model = new SortedListModel();
@@ -328,7 +337,7 @@ public class SQLBuilderCtrl {
         view.getListTableDestination().setModel(model);
         b2.setVisible(true);
     }
-
+    
     private void checkJtable(JTable t, int column) {
         boolean columnEmpty = false;
         for (int i = 0; i < t.getRowCount(); i++) {
@@ -340,7 +349,7 @@ public class SQLBuilderCtrl {
             ((DefaultTableModel) t.getModel()).addRow(new Object[]{"", "", new DetailsModel(), ""});
         }
     }
-
+    
     private void cleanupRowEmptyTable(JTable t, BalloonTip b) {
         List<Integer> rowEmpty = new ArrayList<>();
         for (int i = 0; i < t.getRowCount(); i++) {
@@ -349,7 +358,7 @@ public class SQLBuilderCtrl {
                 rowEmpty.add(i);
             }
         }
-
+        
         for (Integer row : rowEmpty) {
             ((DefaultTableModel) t.getModel()).removeRow(row);
         }
@@ -357,7 +366,7 @@ public class SQLBuilderCtrl {
             b.setVisible(true);
         }
     }
-
+    
     private void configureTableRelationship() {
         Action edit = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -368,28 +377,28 @@ public class SQLBuilderCtrl {
                 } catch (ClassNotFoundException | SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-
+                
             }
-
+            
         };
-
+        
         ButtonColumn buttonColumn = new ButtonColumn(view.getTableRelationship(), edit, 3);
         buttonColumn.setMnemonic(KeyEvent.VK_E);
     }
-
+    
     private void showDetail(String tableSource, String tableDestination, DetailsModel detail) throws ClassNotFoundException, SQLException {
-
+        
         if (tableSource == null || tableSource.isEmpty()) {
             throw new InvalidParameterException("A tabela de origem não foi selecionada!");
         }
-
+        
         if (tableDestination == null || tableDestination.isEmpty()) {
             throw new InvalidParameterException("A tabela de destino não foi selecionada!");
         }
-
+        
         b4.setVisible(true);
         b5.setVisible(true);
-        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), view.getIphostSource().getText(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
+        ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), ((AddressSource) view.getIphostSource().getSelectedItem()).getIp(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
         SortedListModel model = new SortedListModel();
         List<String> fieldsSource = DatabaseFactory.getDatabase(param).listFieldsTable(tableSource);
         for (String field : fieldsSource) {
@@ -398,7 +407,7 @@ public class SQLBuilderCtrl {
         loadComboFieldKey(fieldsSource);
         viewDetail.getListFieldSource().setModel(model);
         ((DefaultTableModel) viewDetail.getTableRelationship().getModel()).setRowCount(0);
-
+        
         param = new ParamDatabase((SGDB) view.getSgbdDestination().getSelectedItem(), view.getIphostDestination().getText(), view.getPortDestination().getText(), view.getUserDestination().getText(), new String(view.getPasswordDestination().getPassword()), view.getDatabaseDestination().getText());
         model = new SortedListModel();
         List<String> fieldsDestination = DatabaseFactory.getDatabase(param).listFieldsTable(tableDestination);
@@ -409,7 +418,7 @@ public class SQLBuilderCtrl {
         viewDetail.getStatus().setText("<html>Mapeamento campo a campo entre as tabelas:"
                 + "<br>" + tableSource + " (" + view.getSgbdSource().getSelectedItem() + ")<br>" + tableDestination + "(" + view.getSgbdDestination().getSelectedItem() + ")</html>");
         viewDetail.setVisible(true);
-
+        
         detail.getFields().clear();
         for (int i = 0; i < viewDetail.getTableRelationship().getRowCount(); i++) {
             Field field = new Field(viewDetail.getTableRelationship().getValueAt(i, 0).toString(), viewDetail.getTableRelationship().getValueAt(i, 1).toString(), null);
@@ -417,7 +426,7 @@ public class SQLBuilderCtrl {
         }
         view.getTableRelationship().repaint();
     }
-
+    
     private void construct() {
         view = new SQLBuilderGUI(this);
         viewDetail = new DetailRelationshipGUI(parentRootFrame, true, this);
@@ -434,6 +443,25 @@ public class SQLBuilderCtrl {
         daoDestination = new DestinationDao(new CriadorDeSessao().getSession());
         daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
         entityDao = new EntityDao(new CriadorDeSessao().getSession());
-        view.getComboTask().setEditable(false);
+        view.getComboTask().setEnabled(false);
     }
+    
+    private void fillDataSource(Source source) {
+        view.getIphostSource().setModel(new DefaultComboBoxModel(daoAddress.bySource(source).toArray()));
+        view.getPortSource().setText(source.getPort());
+        view.getUserSource().setText(source.getUser());
+        view.getPasswordSource().setText(source.getPassword());
+        view.getDatabaseSource().setText(source.getDatabaseName());
+        view.getSgbdSource().setSelectedItem(SGDB.byID(source.getTipo()));
+    }
+    
+    private void fillDataDestination(Destination destination) {
+        view.getIphostDestination().setText(destination.getIp());
+        view.getPortDestination().setText(destination.getPort());
+        view.getUserDestination().setText(destination.getUser());
+        view.getPasswordDestination().setText(destination.getPassword());
+        view.getDatabaseDestination().setText(destination.getDatabaseName());
+        view.getSgbdDestination().setSelectedItem(SGDB.byID(destination.getTipo()));
+    }
+    
 }
