@@ -19,19 +19,23 @@ public class SourceDao {
         return (Source) session.load(Source.class, id);
     }
 
-    public List<Source> porTask(Task t) {
-        return (List<Source>) session.createQuery("from Source s where task = :task")
-                .setParameter("task", t).list();
+    public Source byTask(Task t) {
+        return (Source) session.createQuery("from Source s where task = :task")
+                .setParameter("task", t).uniqueResult();
     }
 
     public List<Source> list() {
         return (List<Source>) session.createQuery("from Source s").list();
     }
 
-    public void salvar(Source o) {
+    public void salvar(Source s) {
         try {
             session.getTransaction().begin();
-            session.save(o);
+            if (s.getId() > 0) {
+                session.merge(s);
+            } else {
+                session.save(s);
+            }
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();

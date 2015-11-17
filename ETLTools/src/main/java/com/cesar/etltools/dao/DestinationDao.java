@@ -1,10 +1,9 @@
 package com.cesar.etltools.dao;
 
-
 import com.cesar.etltools.dominio.Destination;
+import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 
-import com.cesar.etltools.dominio.Task;
 import java.util.List;
 
 public class DestinationDao {
@@ -15,23 +14,27 @@ public class DestinationDao {
         this.session = session;
     }
 
-    public Destination porId(int id) {
+    public Destination byId(int id) {
         return (Destination) session.load(Destination.class, id);
     }
 
-    public List<Destination> porTask(Task t) {
-        return (List<Destination>) session.createQuery("from Destination d where task = :task")
-                .setParameter("task", t).list();
+    public Destination bySource(Source s) {
+        return (Destination) session.createQuery("from Destination d where source = :source")
+                .setParameter("source", s).uniqueResult();
     }
 
     public List<Destination> list() {
         return (List<Destination>) session.createQuery("from Destination d").list();
     }
 
-    public void salvar(Destination o) {
+    public void salvar(Destination d) {
         try {
             session.getTransaction().begin();
-            session.save(o);
+            if (d.getId() > 0) {
+                session.merge(d);
+            } else {
+                session.save(d);
+            }
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();

@@ -1,6 +1,7 @@
 package com.cesar.etltools.dao;
 
 import com.cesar.etltools.dominio.Entity;
+import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 
 import com.cesar.etltools.dominio.Task;
@@ -18,19 +19,23 @@ public class EntityDao {
         return (Entity) session.load(Entity.class, id);
     }
 
-    public List<Entity> porTask(Task t) {
-        return (List<Entity>) session.createQuery("from Entity s where task = :task")
-                .setParameter("task", t).list();
+    public List<Entity> bySource(Source s) {
+        return (List<Entity>) session.createQuery("from Entity e where source = :source")
+                .setParameter("source", s).list();
     }
 
     public List<Entity> list() {
         return (List<Entity>) session.createQuery("from Entity s").list();
     }
 
-    public void salvar(Entity o) {
+    public void salvar(Entity e) {
         try {
             session.getTransaction().begin();
-            session.save(o);
+            if (e.getId() > 0) {
+                session.merge(e);
+            } else {
+                session.save(e);
+            }
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
@@ -38,27 +43,25 @@ public class EntityDao {
         }
     }
 
-    public void atualizar(Entity r) {
+    public void deletar(Entity e) {
         try {
             session.getTransaction().begin();
-            session.merge(r);
+            session.delete(e);
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-
     }
 
-    public void deletar(Entity s) {
+    public void deletarBySource(Source s) {
         try {
             session.getTransaction().begin();
-            session.delete(s);
+            session.createQuery("delete from Entity where source.id= :sourceId").setInteger("sourceId", s.getId()).executeUpdate();
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-
     }
 }

@@ -5,11 +5,15 @@
  */
 package com.cesar.etltools.dominio;
 
+import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import org.hibernate.annotations.Cascade;
 
 @javax.persistence.Entity
 public class Entity {
@@ -21,8 +25,12 @@ public class Entity {
     private String nameKeySource;
     private String conditionSource;
     private String entityDestination;
-    @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Source source;
+    @OneToMany(fetch=FetchType.EAGER, orphanRemoval=true)
+    @JoinColumn(name="id")
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    private Collection<Field> fields;
 
     public int getId() {
         return id;
@@ -72,4 +80,11 @@ public class Entity {
         this.source = source;
     }
 
+    public Collection<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(Collection<Field> fields) {
+        this.fields = fields;
+    }
 }

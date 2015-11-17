@@ -5,11 +5,8 @@
  */
 package com.cesar.etltools.dominio;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @javax.persistence.Entity
 public class Field {
@@ -19,13 +16,10 @@ public class Field {
     private int id;
     private String nameFieldSource;
     private String nameFieldDestination;
-    @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    private Entity entity;
 
     public Field(String nameFieldSource, String nameFieldDestination, Entity entity) {
         this.nameFieldSource = nameFieldSource;
         this.nameFieldDestination = nameFieldDestination;
-        this.entity = entity;
     }
 
     public int getId() {
@@ -50,14 +44,6 @@ public class Field {
 
     public void setNameFieldDestination(String nameFieldDestination) {
         this.nameFieldDestination = nameFieldDestination;
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
     }
 
 }

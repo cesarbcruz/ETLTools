@@ -9,7 +9,6 @@ import com.cesar.etltools.dao.AddressSourceDao;
 import com.cesar.etltools.dao.CriadorDeSessao;
 import com.cesar.etltools.dao.DestinationDao;
 import com.cesar.etltools.dao.EntityDao;
-import com.cesar.etltools.dao.FieldDao;
 import com.cesar.etltools.dao.SourceDao;
 import com.cesar.etltools.dao.TaskDao;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
@@ -67,26 +66,20 @@ public class SQLBuilderCtrl {
     private Source source;
     private Destination destination;
     private EntityDao entityDao;
-    private FieldDao fieldDao;
+    private AddressSource addressSource;
+    private List<Entity> entitys;
 
     public SQLBuilderCtrl(JFrame parentRootFrame) {
         this.parentRootFrame = parentRootFrame;
-        view = new SQLBuilderGUI(this);
-        viewDetail = new DetailRelationshipGUI(parentRootFrame, true, this);
-        addActionButtonConnect();
-        addActionButtonSave();
-        addActionCloseDetail();
-        loadComboSgdb();
-        configureBaloonTip();
-        configureListTransfer();
-        configureListTransferDetail();
-        loadComboTask();
-        configureTableRelationship();
-        daoSource = new SourceDao(new CriadorDeSessao().getSession());
-        daoDestination = new DestinationDao(new CriadorDeSessao().getSession());
-        daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
-        entityDao = new EntityDao(new CriadorDeSessao().getSession());
-        fieldDao = new FieldDao(new CriadorDeSessao().getSession());
+        construct();
+    }
+
+    public void openEdit(Task t) {
+        view.getComboTask().setSelectedItem(t);
+        source = daoSource.byTask(t);
+        destination = daoDestination.bySource(source);
+        entitys = entityDao.bySource(source);
+        view.setVisible(true);
     }
 
     private void configureBaloonTip() {
@@ -163,8 +156,7 @@ public class SQLBuilderCtrl {
         view.getSave().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                if (source == null || source.getId() == 0) {
+                if (source == null) {
                     source = new Source();
                 }
 
@@ -179,13 +171,15 @@ public class SQLBuilderCtrl {
 
                 daoSource.salvar(source);
 
-                AddressSource addressSource = new AddressSource();
+                if (addressSource == null) {
+                    addressSource = new AddressSource();
+                }
                 addressSource.setIp(view.getIphostSource().getText());
                 addressSource.setSource(source);
 
                 daoAddress.salvar(addressSource);
 
-                if (destination == null || destination.getId() == 0) {
+                if (destination == null) {
                     destination = new Destination();
                 }
                 destination.setIp(view.getIphostDestination().getText());
@@ -198,6 +192,8 @@ public class SQLBuilderCtrl {
 
                 daoDestination.salvar(destination);
 
+                entityDao.deletarBySource(source);
+
                 for (int l = 0; l < view.getTableRelationship().getRowCount(); l++) {
                     Entity entity = new Entity();
                     entity.setEntitySource(view.getTableRelationship().getValueAt(l, 0).toString());
@@ -205,15 +201,11 @@ public class SQLBuilderCtrl {
                     entity.setConditionSource(viewDetail.getQueryCondition().getText());
                     entity.setEntityDestination(view.getTableRelationship().getValueAt(l, 1).toString());
                     entity.setSource(source);
+                    DetailsModel details = (DetailsModel) view.getTableRelationship().getValueAt(l, 2);
+                    entity.setFields(details.getFields());
                     entityDao.salvar(entity);
-                    
-                    DetailsModel details = (DetailsModel)view.getTableRelationship().getValueAt(l, 2);
-                    for (Object detail : details.getFields()) {
-                        fieldDao.salvar((Field)detail);
-                    }
-                    
-                }
 
+                }
                 JOptionPane.showMessageDialog(parentRootFrame, "Dados salvos com sucesso!");
             }
         });
@@ -424,5 +416,24 @@ public class SQLBuilderCtrl {
             detail.getFields().add(field);
         }
         view.getTableRelationship().repaint();
+    }
+
+    private void construct() {
+        view = new SQLBuilderGUI(this);
+        viewDetail = new DetailRelationshipGUI(parentRootFrame, true, this);
+        addActionButtonConnect();
+        addActionButtonSave();
+        addActionCloseDetail();
+        loadComboSgdb();
+        configureBaloonTip();
+        configureListTransfer();
+        configureListTransferDetail();
+        loadComboTask();
+        configureTableRelationship();
+        daoSource = new SourceDao(new CriadorDeSessao().getSession());
+        daoDestination = new DestinationDao(new CriadorDeSessao().getSession());
+        daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
+        entityDao = new EntityDao(new CriadorDeSessao().getSession());
+        view.getComboTask().setEditable(false);
     }
 }

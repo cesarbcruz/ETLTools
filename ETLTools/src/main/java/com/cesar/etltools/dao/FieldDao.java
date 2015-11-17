@@ -27,27 +27,19 @@ public class FieldDao {
         return (List<Field>) session.createQuery("from Field s").list();
     }
 
-    public void salvar(Field o) {
+    public void salvar(Field f) {
         try {
             session.getTransaction().begin();
-            session.save(o);
+            if (f.getId() > 0) {
+                session.merge(f);
+            } else {
+                session.save(f);
+            }
             session.getTransaction().commit();
         } catch (Exception ex) {
             session.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-    }
-
-    public void atualizar(Field r) {
-        try {
-            session.getTransaction().begin();
-            session.merge(r);
-            session.getTransaction().commit();
-        } catch (Exception ex) {
-            session.getTransaction().rollback();
-            throw new RuntimeException(ex);
-        }
-
     }
 
     public void deletar(Field s) {
