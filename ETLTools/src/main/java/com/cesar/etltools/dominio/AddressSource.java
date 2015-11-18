@@ -6,11 +6,13 @@
 package com.cesar.etltools.dominio;
 
 import java.sql.Timestamp;
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
 
 /**
  *
@@ -23,11 +25,16 @@ public class AddressSource {
     @GeneratedValue
     private int id;
     private String ip;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Source source;
     private String lastKeyField;
     private Timestamp dateTimeUpdate;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sourceid", insertable = true, updatable = true)
+    @Fetch(org.hibernate.annotations.FetchMode.JOIN)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Source source;
+    
+    
     public int getId() {
         return id;
     }

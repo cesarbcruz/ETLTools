@@ -5,11 +5,15 @@
  */
 package com.cesar.etltools.dominio;
 
+import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
 
 @javax.persistence.Entity
 public class Source {
@@ -24,6 +28,14 @@ public class Source {
     private int tipo;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Task task;
+
+    @OneToMany(mappedBy = "source", fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Collection<AddressSource> addressSource;
+    
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Destination destination;
 
     public int getId() {
         return id;
@@ -79,6 +91,22 @@ public class Source {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public Collection<AddressSource> getAddressSource() {
+        return addressSource;
+    }
+
+    public void setAddressSource(Collection<AddressSource> addressSource) {
+        this.addressSource = addressSource;
+    }
+
+    public Destination getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
     }
 
 }

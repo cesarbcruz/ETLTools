@@ -46,7 +46,7 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         passwordSource = new javax.swing.JPasswordField();
         iphostSource = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        editAddressSource = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         scrollTablesSource = new javax.swing.JScrollPane();
         listTableSource = new javax.swing.JList();
@@ -200,13 +200,13 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(iphostSource, gridBagConstraints);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/edit.png"))); // NOI18N
-        jButton1.setText(bundle.getString("SQLBuilderGUI.jButton1.text")); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(44, 22));
+        editAddressSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/edit.png"))); // NOI18N
+        editAddressSource.setText(bundle.getString("SQLBuilderGUI.editAddressSource.text")); // NOI18N
+        editAddressSource.setPreferredSize(new java.awt.Dimension(44, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        jPanel1.add(jButton1, gridBagConstraints);
+        jPanel1.add(editAddressSource, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -576,14 +576,18 @@ public class SQLBuilderGUI extends javax.swing.JInternalFrame {
         return save;
     }
 
+    public JButton getEditAddressSource() {
+        return editAddressSource;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboTask;
     private javax.swing.JButton connect;
     private javax.swing.JFormattedTextField databaseDestination;
     private javax.swing.JFormattedTextField databaseSource;
+    private javax.swing.JButton editAddressSource;
     private javax.swing.JFormattedTextField iphostDestination;
     private javax.swing.JComboBox iphostSource;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
