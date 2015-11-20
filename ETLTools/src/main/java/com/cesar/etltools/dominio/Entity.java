@@ -6,13 +6,14 @@
 package com.cesar.etltools.dominio;
 
 import java.util.Collection;
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
 
 @javax.persistence.Entity
 public class Entity {
@@ -24,7 +25,11 @@ public class Entity {
     private String nameKeySource;
     private String conditionSource;
     private String entityDestination;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sourceid", insertable = true, updatable = true)
+    @Fetch(org.hibernate.annotations.FetchMode.JOIN)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Source source;
 
     @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY)

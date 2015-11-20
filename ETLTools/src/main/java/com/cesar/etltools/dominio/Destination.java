@@ -5,11 +5,8 @@
  */
 package com.cesar.etltools.dominio;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @javax.persistence.Entity
 public class Destination {
@@ -20,7 +17,7 @@ public class Destination {
     private String ip;
     private String port;
     private String databaseName;
-    private String user;
+    private String userName;
     private String password;
     private int tipo;
 
@@ -56,12 +53,12 @@ public class Destination {
         this.databaseName = databaseName;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserName(String user) {
+        this.userName = user;
     }
 
     public String getPassword() {

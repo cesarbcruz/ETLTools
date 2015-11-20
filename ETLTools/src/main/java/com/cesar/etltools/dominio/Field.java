@@ -29,12 +29,6 @@ public class Field {
     @Cascade(CascadeType.ALL)
     private Entity entity;
 
-    public Field(String nameFieldSource, String nameFieldDestination, Entity entity) {
-        this.nameFieldSource = nameFieldSource;
-        this.nameFieldDestination = nameFieldDestination;
-        this.entity = entity;
-    }
-
     public int getId() {
         return id;
     }

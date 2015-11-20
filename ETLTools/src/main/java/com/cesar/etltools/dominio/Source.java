@@ -23,15 +23,20 @@ public class Source {
     private int id;
     private String port;
     private String databaseName;
-    private String user;
+    private String userName;
     private String password;
     private int tipo;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Task task;
+    
+    @OneToMany(mappedBy = "source", fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Collection<Entity> entity;
 
     @OneToMany(mappedBy = "source", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Collection<AddressSource> addressSource;
+    
     
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -61,12 +66,12 @@ public class Source {
         this.databaseName = databaseName;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserName(String user) {
+        this.userName = user;
     }
 
     public String getPassword() {
@@ -109,4 +114,11 @@ public class Source {
         this.destination = destination;
     }
 
+    public Collection<Entity> getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Collection<Entity> entity) {
+        this.entity = entity;
+    }
 }
