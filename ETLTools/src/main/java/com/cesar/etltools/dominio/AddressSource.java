@@ -5,12 +5,13 @@
  */
 package com.cesar.etltools.dominio;
 
-import java.sql.Timestamp;
+import java.util.Collection;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 
@@ -25,16 +26,16 @@ public class AddressSource {
     @GeneratedValue
     private int id;
     private String ip;
-    private String lastKeyField;
-    private Timestamp dateTimeUpdate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Source source;
     
-    
+    @OneToMany(mappedBy = "addressSource", fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Collection<MigrationDataTable> migrationDataTables;
+
     public int getId() {
         return id;
     }
@@ -59,24 +60,17 @@ public class AddressSource {
         this.source = source;
     }
 
-    public String getLastKeyField() {
-        return lastKeyField;
+    public Collection<MigrationDataTable> getMigrationDataTables() {
+        return migrationDataTables;
     }
 
-    public void setLastKeyField(String lastKeyField) {
-        this.lastKeyField = lastKeyField;
-    }
-
-    public Timestamp getDateTimeUpdate() {
-        return dateTimeUpdate;
-    }
-
-    public void setDateTimeUpdate(Timestamp dateTimeUpdate) {
-        this.dateTimeUpdate = dateTimeUpdate;
+    public void setMigrationDataTables(Collection<MigrationDataTable> migrationDataTables) {
+        this.migrationDataTables = migrationDataTables;
     }
 
     @Override
     public String toString() {
         return ip;
-    }
+    }   
+
 }

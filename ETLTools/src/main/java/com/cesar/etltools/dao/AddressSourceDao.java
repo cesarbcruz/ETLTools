@@ -42,10 +42,14 @@ public class AddressSourceDao {
         }
     }
 
-    public void deleteBySource(Source s) {
-        session.getTransaction().begin();
-        session.createQuery("DELETE FROM AddressSource a where source = :source")
-                .setParameter("source", s).executeUpdate();
-        session.getTransaction().commit();
+    public void deletar(AddressSource e) {
+        try {
+            session.getTransaction().begin();
+            session.delete(e);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            throw new RuntimeException(ex);
+        }
     }
 }

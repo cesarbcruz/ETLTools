@@ -67,6 +67,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("language/Bundle_pt_BR"); // NOI18N
         buttonCreateTask.setText(bundle.getString("MainGUI.buttonCreateTask.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -74,7 +75,8 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonCreateTask, gridBagConstraints);
 
-        buttonSQLBuilder.setText(bundle.getString("MainGUI.buttonSQLBuilder.text")); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("Bundle_pt_BR"); // NOI18N
+        buttonSQLBuilder.setText(bundle1.getString("MainGUI.buttonSQLBuilder.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -110,10 +112,11 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("MainGUI.jScrollPane2.border.title"))); // NOI18N
+
         log.setEditable(false);
         log.setColumns(20);
         log.setRows(5);
-        log.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("MainGUI.log.border.title"))); // NOI18N
         jScrollPane2.setViewportView(log);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -215,6 +218,5 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JList list;
     private javax.swing.JTextArea log;
-    java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }

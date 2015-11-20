@@ -29,7 +29,6 @@ public class Entity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Source source;
 
     @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY)

@@ -74,6 +74,7 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonCreateTask, gridBagConstraints);
 
+
         buttonSQLBuilder.setText(bundle.getString("MainGUI.buttonSQLBuilder.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -110,10 +111,11 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("MainGUI.jScrollPane2.border.title"))); // NOI18N
+
         log.setEditable(false);
         log.setColumns(20);
         log.setRows(5);
-        log.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("MainGUI.log.border.title"))); // NOI18N
         jScrollPane2.setViewportView(log);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
