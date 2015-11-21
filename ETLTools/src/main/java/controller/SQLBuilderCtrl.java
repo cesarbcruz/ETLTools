@@ -14,6 +14,7 @@ import com.cesar.etltools.dominio.Destination;
 import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.AddressSource;
 import com.cesar.etltools.dominio.Field;
+import com.cesar.etltools.dominio.MigrationDataTable;
 import com.cesar.etltools.dominio.Source;
 import com.cesar.etltools.dominio.Task;
 import com.cesar.etltools.model.ButtonColumn;
@@ -27,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -201,6 +203,37 @@ public class SQLBuilderCtrl {
             @Override
             public void actionPerformed(ActionEvent e) {
                 viewAddressSource.dispose();
+            }
+        });
+    }
+
+    private void addActionButtonHistoricEditAddressSource() {
+        viewAddressSource.getHistoric().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List selectedValues = viewAddressSource.getListAddressSource().getSelectedValuesList();
+                if (selectedValues != null && !selectedValues.isEmpty()) {
+                    if (selectedValues.size() > 1) {
+                        JOptionPane.showMessageDialog(parentRootFrame, "Selecone apenas um item para verificar o histórico!");
+                    } else {
+                        StringBuilder view = new StringBuilder();
+                        if (((AddressSource) selectedValues.get(0)).getMigrationDataTables() != null) {
+                            for (MigrationDataTable migrationDataTable : ((AddressSource) selectedValues.get(0)).getMigrationDataTables()) {
+                                view.append("Entidade: ").append(migrationDataTable.getEntity().getEntitySource())
+                                        .append(", último valor campo chave: ").append(migrationDataTable.getLastKeyField())
+                                        .append(", data/hora atualização: ").append(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(migrationDataTable.getDateTimeUpdate()))
+                                        .append("\n");
+                            }
+                        }
+                        if (view.toString().isEmpty()) {
+                            JOptionPane.showMessageDialog(parentRootFrame, "Nenhum histórico foi encontrado!");
+                        } else {
+                            JOptionPane.showMessageDialog(parentRootFrame, view);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(parentRootFrame, "Algum item deve ser selecionado!");
+                }
             }
         });
     }
@@ -566,6 +599,7 @@ public class SQLBuilderCtrl {
         addActionButtonAddAddressSource();
         addActionCloseDetail();
         addActionButtonCloseEditAddressSource();
+        addActionButtonHistoricEditAddressSource();
         loadComboSgdb();
         configureBaloonTip();
         configureListTransfer();

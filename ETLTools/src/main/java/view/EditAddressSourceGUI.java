@@ -43,7 +43,6 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         return removeIPSource;
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -60,6 +59,7 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         ipHostSource = new javax.swing.JTextField();
         removeIPSource = new javax.swing.JButton();
         closeEditAddressSource = new javax.swing.JButton();
+        historic = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("language/Bundle_pt_BR"); // NOI18N
@@ -71,7 +71,7 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -81,7 +81,7 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         addIPSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/add.gif"))); // NOI18N
         addIPSource.setText(bundle.getString("EditAddressSourceGUI.addIPSource.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         getContentPane().add(addIPSource, gridBagConstraints);
@@ -90,6 +90,7 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 14.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -98,7 +99,7 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         removeIPSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/remove.png"))); // NOI18N
         removeIPSource.setText(bundle.getString("EditAddressSourceGUI.removeIPSource.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -106,11 +107,19 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
 
         closeEditAddressSource.setText(bundle.getString("EditAddressSourceGUI.closeEditAddressSource.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         getContentPane().add(closeEditAddressSource, gridBagConstraints);
+
+        historic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/historico.png"))); // NOI18N
+        historic.setText(bundle.getString("EditAddressSourceGUI.historic.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        getContentPane().add(historic, gridBagConstraints);
 
         setSize(new java.awt.Dimension(410, 330));
         setLocationRelativeTo(null);
@@ -158,9 +167,14 @@ public class EditAddressSourceGUI extends javax.swing.JDialog {
         });
     }
 
+    public JButton getHistoric() {
+        return historic;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addIPSource;
     private javax.swing.JButton closeEditAddressSource;
+    private javax.swing.JButton historic;
     private javax.swing.JTextField ipHostSource;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList listAddressSource;
