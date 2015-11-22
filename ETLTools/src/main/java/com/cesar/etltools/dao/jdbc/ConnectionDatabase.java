@@ -30,7 +30,7 @@ public class ConnectionDatabase {
         return con;
     }
 
-    protected void closeConnection() throws SQLException {
+    public void closeConnection() throws SQLException {
         if (con != null) {
             con.close();
         }

@@ -19,6 +19,7 @@ public class MainGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form MainGUI
+     * @param bundle
      */
     public MainGUI(ResourceBundle bundle) {
         this.bundle = bundle;

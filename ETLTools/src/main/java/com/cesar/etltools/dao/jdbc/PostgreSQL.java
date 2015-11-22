@@ -56,7 +56,7 @@ public class PostgreSQL extends Database {
     public List<String> listFieldsTable(String tableName) throws ClassNotFoundException, SQLException {
         try {
             List<String> list = new ArrayList<>();
-            PreparedStatement pstmt = connect().prepareStatement("SELECT * FROM " + tableName+" LIMIT 0");
+            PreparedStatement pstmt = connect().prepareStatement("SELECT * FROM " + tableName + " LIMIT 0");
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
@@ -64,6 +64,20 @@ public class PostgreSQL extends Database {
                 list.add(rsmd.getColumnName(i));
             }
             return list;
+        } finally {
+            closeConnection();
+        }
+    }
+
+    @Override
+    public ResultSet executeQuery(String query) throws ClassNotFoundException, SQLException {
+        return connect().prepareStatement(query).executeQuery();
+    }
+
+    @Override
+    public void executeSql(String sql) throws ClassNotFoundException, SQLException {
+        try {
+            connect().prepareStatement(sql).execute();
         } finally {
             closeConnection();
         }

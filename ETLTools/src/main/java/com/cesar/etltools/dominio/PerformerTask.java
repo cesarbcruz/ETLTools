@@ -29,6 +29,7 @@ public abstract class PerformerTask {
             @Override
             public void run() {
                 System.out.println("Execute Task: " + t.getDescription());
+                new MigrateData().execute(t);
                 taskEvent(t);
             }
         };

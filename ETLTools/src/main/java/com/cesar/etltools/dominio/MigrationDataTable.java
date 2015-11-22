@@ -25,7 +25,7 @@ public class MigrationDataTable {
     @Id
     @GeneratedValue
     private int id;
-    private String lastKeyField;
+    private int lastKeyField;
     private Timestamp dateTimeUpdate;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -45,11 +45,11 @@ public class MigrationDataTable {
         this.id = id;
     }
 
-    public String getLastKeyField() {
+    public int getLastKeyField() {
         return lastKeyField;
     }
 
-    public void setLastKeyField(String lastKeyField) {
+    public void setLastKeyField(int lastKeyField) {
         this.lastKeyField = lastKeyField;
     }
 
