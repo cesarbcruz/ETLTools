@@ -13,7 +13,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,15 +45,15 @@ public class MySql extends Database {
         }
     }
 
-    public List<String> listFieldsTable(String tableName) throws ClassNotFoundException, SQLException {
+    public Map<String, Integer> listFieldsTable(String tableName) throws ClassNotFoundException, SQLException {
         try {
-            List<String> list = new ArrayList<>();
+            Map<String, Integer> list = new LinkedHashMap<>();
             PreparedStatement pstmt = connect().prepareStatement("SELECT * FROM " + tableName + " LIMIT 0");
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
             for (int i = 1; i < columnCount + 1; i++) {
-                list.add(rsmd.getColumnName(i));
+                list.put(rsmd.getColumnName(i), rsmd.getColumnType(i));
             }
             return list;
         } finally {
@@ -65,12 +67,7 @@ public class MySql extends Database {
     }
 
     @Override
-    public void executeSql(String sql) throws ClassNotFoundException, SQLException {
-        try {
-            connect().prepareStatement(sql).execute();
-        } finally {
-            closeConnection();
-        }
+    public PreparedStatement executeSql(String sql) throws ClassNotFoundException, SQLException {
+        return connect().prepareStatement(sql);
     }
-
 }

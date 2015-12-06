@@ -5,6 +5,7 @@
  */
 package com.cesar.etltools.model;
 
+import com.cesar.etltools.dominio.Entity;
 import com.cesar.etltools.dominio.Field;
 import java.util.ArrayList;
 
@@ -14,9 +15,12 @@ import java.util.ArrayList;
  */
 public class DetailsModel {
 
+    private Entity entity;
     private ArrayList<Field> fields;
     private String nameKeySource;
     private String conditionSource;
+    private String nameKeyDestination;
+    private String valueKeyDestination;
 
     public DetailsModel() {
         fields = new ArrayList<>();
@@ -51,4 +55,28 @@ public class DetailsModel {
         return fields != null ? String.valueOf(fields.size()) : "";
     }
 
+    public String getNameKeyDestination() {
+        return nameKeyDestination;
+    }
+
+    public void setNameKeyDestination(String nameKeyDestination) {
+        this.nameKeyDestination = nameKeyDestination;
+    }
+
+    public String getValueKeyDestination() {
+        return valueKeyDestination;
+    }
+
+    public void setValueKeyDestination(String valueKeyDestination) {
+        this.valueKeyDestination = valueKeyDestination;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+    
 }

@@ -21,7 +21,9 @@ public class Field {
     @GeneratedValue
     private int id;
     private String nameFieldSource;
+    private int typeSource;
     private String nameFieldDestination;
+    private int typeDestination;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entityid", insertable = true, updatable = true)
@@ -60,4 +62,21 @@ public class Field {
     public void setEntity(Entity entity) {
         this.entity = entity;
     }
+
+    public int getTypeSource() {
+        return typeSource;
+    }
+
+    public void setTypeSource(int typeSource) {
+        this.typeSource = typeSource;
+    }
+
+    public int getTypeDestination() {
+        return typeDestination;
+    }
+
+    public void setTypeDestination(int typeDestination) {
+        this.typeDestination = typeDestination;
+    }
+
 }

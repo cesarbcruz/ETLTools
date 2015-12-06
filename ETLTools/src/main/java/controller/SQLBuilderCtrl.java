@@ -8,6 +8,7 @@ package controller;
 import com.cesar.etltools.dao.AddressSourceDao;
 import com.cesar.etltools.dao.CriadorDeSessao;
 import com.cesar.etltools.dao.EntityDao;
+import com.cesar.etltools.dao.FieldDao;
 import com.cesar.etltools.dao.SourceDao;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
 import com.cesar.etltools.dominio.Destination;
@@ -31,7 +32,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
@@ -43,6 +46,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.EdgedBalloonStyle;
+import org.hibernate.Session;
 import view.DetailRelationshipGUI;
 import view.EditAddressSourceGUI;
 import view.SQLBuilderGUI;
@@ -66,6 +70,7 @@ public class SQLBuilderCtrl {
     AddressSourceDao daoAddress;
     private Source source;
     private EntityDao entityDao;
+    FieldDao fieldDao;
     private EditAddressSourceGUI viewAddressSource;
 
     public SQLBuilderCtrl(JFrame parentRootFrame) {
@@ -102,12 +107,22 @@ public class SQLBuilderCtrl {
         return view;
     }
 
-    private void loadComboFieldKey(List<String> fields) {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        for (String field : fields) {
-            model.addElement(field);
+    private void loadComboFieldKey(Map<String, Integer> fieldsSource) {
+        DefaultComboBoxModel modelCombo = new DefaultComboBoxModel();
+        for (Map.Entry<String, Integer> entrySet : fieldsSource.entrySet()) {
+            String field = entrySet.getKey();
+            modelCombo.addElement(field);
         }
-        viewDetail.getFieldKey().setModel(model);
+        viewDetail.getFieldKey().setModel(modelCombo);
+    }
+
+    private void loadComboFieldKeyDestination(Map<String, Integer> fieldsDestination) {
+        DefaultComboBoxModel modelCombo = new DefaultComboBoxModel();
+        for (Map.Entry<String, Integer> entrySet : fieldsDestination.entrySet()) {
+            String field = entrySet.getKey();
+            modelCombo.addElement(field);
+        }
+        viewDetail.getFieldKeyDestination().setModel(modelCombo);
     }
 
     public void connectDatabase() throws ClassNotFoundException, SQLException, CloneNotSupportedException {
@@ -296,28 +311,26 @@ public class SQLBuilderCtrl {
                 destination.setPassword(new String(view.getPasswordDestination().getPassword()));
                 destination.setTipo(((SGDB) view.getSgbdDestination().getSelectedItem()).getId());
 
-                if (source.getId() > 0) {
-                    entityDao.deleteBySource(source);
-                }
-
                 List<Entity> entitys = new ArrayList<>();
                 for (int l = 0; l < view.getTableRelationship().getRowCount(); l++) {
-                    Entity entity = new Entity();
+                    DetailsModel details = (DetailsModel) view.getTableRelationship().getValueAt(l, 2);
+
+                    Entity entity = details.getEntity();
+
+                    if (entity == null) {
+                        entity = new Entity();
+                    }
+
                     entity.setEntitySource(view.getTableRelationship().getValueAt(l, 0).toString());
                     entity.setEntityDestination(view.getTableRelationship().getValueAt(l, 1).toString());
                     entity.setSource(source);
-                    DetailsModel details = (DetailsModel) view.getTableRelationship().getValueAt(l, 2);
                     entity.setNameKeySource(details.getNameKeySource());
                     entity.setConditionSource(details.getConditionSource());
-                    List<Field> fields = new ArrayList<>();
-                    for (Field fieldTemp : details.getFields()) {
-                        Field f = new Field();
-                        f.setNameFieldSource(fieldTemp.getNameFieldSource());
-                        f.setNameFieldDestination(fieldTemp.getNameFieldDestination());
-                        f.setEntity(entity);
-                        fields.add(f);
-                    }
-                    entity.setField(fields);
+
+                    entity.setNameKeyDestination(details.getNameKeyDestination());
+                    entity.setValueKeyDestination(details.getValueKeyDestination());
+
+                    entity.setField(details.getFields());
                     entitys.add(entity);
                 }
                 source.setEntity(entitys);
@@ -343,7 +356,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(view.getTableRelationship(), b3);
+                cleanupRowEmptyTableEntity(view.getTableRelationship(), b3);
             }
 
         });
@@ -359,7 +372,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(view.getTableRelationship(), b3);
+                cleanupRowEmptyTableEntity(view.getTableRelationship(), b3);
             }
         });
         view.getListTableDestination().setName("1");
@@ -374,7 +387,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(view.getTableRelationship(), b3);
+                cleanupRowEmptyTableEntity(view.getTableRelationship(), b3);
             }
         });
         view.getTableRelationship().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -392,7 +405,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
+                cleanupRowEmptyTableField(viewDetail.getTableRelationship(), b6);
             }
 
         });
@@ -407,7 +420,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
+                cleanupRowEmptyTableField(viewDetail.getTableRelationship(), b6);
             }
         });
         viewDetail.getListFieldDestination().setName("1");
@@ -422,7 +435,7 @@ public class SQLBuilderCtrl {
 
             @Override
             void eventCleanup() {
-                cleanupRowEmptyTable(viewDetail.getTableRelationship(), b6);
+                cleanupRowEmptyTableField(viewDetail.getTableRelationship(), b6);
             }
         });
         viewDetail.getTableRelationship().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -497,7 +510,7 @@ public class SQLBuilderCtrl {
         }
     }
 
-    private void cleanupRowEmptyTable(JTable t, BalloonTip b) {
+    private void cleanupRowEmptyTableEntity(JTable t, BalloonTip b) {
         List<Integer> rowEmpty = new ArrayList<>();
         for (int i = 0; i < t.getRowCount(); i++) {
             if ((t.getValueAt(i, 0) == null || t.getValueAt(i, 0).toString().isEmpty())
@@ -508,7 +521,42 @@ public class SQLBuilderCtrl {
         }
 
         for (Integer row : rowEmpty) {
-            ((DefaultTableModel) t.getModel()).removeRow(row);
+
+            Object obj = t.getValueAt(row, 2);
+            if (obj != null && (obj instanceof DetailsModel)) {
+                DetailsModel dm = (DetailsModel) obj;
+                if (dm.getEntity() != null && dm.getEntity().getId() > 0) {
+                    entityDao.deletar(dm.getEntity());
+                    ((DefaultTableModel) t.getModel()).removeRow(row);
+                }
+            }
+        }
+        if (t.getRowCount() > 0) {
+            b.setVisible(true);
+        }
+    }
+
+    private void cleanupRowEmptyTableField(JTable t, BalloonTip b) {
+        List<Integer> rowEmpty = new ArrayList<>();
+        for (int i = 0; i < t.getRowCount(); i++) {
+            if ((t.getValueAt(i, 0) == null || t.getValueAt(i, 0).toString().isEmpty())
+                    && (t.getValueAt(i, 1) == null
+                    || t.getValueAt(i, 1).toString().isEmpty())) {
+                rowEmpty.add(i);
+            }
+        }
+
+        for (Integer row : rowEmpty) {
+            Object obj = t.getValueAt(row, 2);
+            if (obj != null && (obj instanceof Field)) {
+                Field field = (Field) obj;
+                if (field.getId() > 0) {
+                    Entity entity = ((DetailsModel)view.getTableRelationship().getValueAt(view.getTableRelationship().getSelectedRow(), 2)).getEntity();
+                    entity.getField().remove(field);
+                    fieldDao.deletar(field);
+                    ((DefaultTableModel) t.getModel()).removeRow(row);
+                }
+            }
         }
         if (t.getRowCount() > 0) {
             b.setVisible(true);
@@ -549,8 +597,10 @@ public class SQLBuilderCtrl {
         b5.setVisible(true);
         ParamDatabase param = new ParamDatabase((SGDB) view.getSgbdSource().getSelectedItem(), ((AddressSource) view.getIphostSource().getSelectedItem()).getIp(), view.getPortSource().getText(), view.getUserSource().getText(), new String(view.getPasswordSource().getPassword()), view.getDatabaseSource().getText());
         SortedListModel model = new SortedListModel();
-        List<String> fieldsSource = DatabaseFactory.getDatabase(param).listFieldsTable(tableSource);
-        for (String field : fieldsSource) {
+        Map<String, Integer> fieldsSource = DatabaseFactory.getDatabase(param).listFieldsTable(tableSource);
+
+        for (Map.Entry<String, Integer> entrySet : fieldsSource.entrySet()) {
+            String field = entrySet.getKey();
             if (!objectAlreadyExists.source.contains(field)) {
                 model.add(field);
             }
@@ -560,12 +610,14 @@ public class SQLBuilderCtrl {
 
         param = new ParamDatabase((SGDB) view.getSgbdDestination().getSelectedItem(), view.getIphostDestination().getText(), view.getPortDestination().getText(), view.getUserDestination().getText(), new String(view.getPasswordDestination().getPassword()), view.getDatabaseDestination().getText());
         model = new SortedListModel();
-        List<String> fieldsDestination = DatabaseFactory.getDatabase(param).listFieldsTable(tableDestination);
-        for (String field : fieldsDestination) {
-            if (!objectAlreadyExists.destination.contains(field)) {
+        Map<String, Integer> fieldsDestination = DatabaseFactory.getDatabase(param).listFieldsTable(tableDestination);
+        for (Map.Entry<String, Integer> entrySet : fieldsDestination.entrySet()) {
+            String field = entrySet.getKey();
+            if (!objectAlreadyExists.source.contains(field)) {
                 model.add(field);
             }
         }
+        loadComboFieldKeyDestination(fieldsDestination);
         viewDetail.getListFieldDestination().setModel(model);
         viewDetail.getStatus().setText("<html>Mapeamento campo a campo entre as tabelas:"
                 + "<br>" + tableSource + " (" + view.getSgbdSource().getSelectedItem() + ")<br>" + tableDestination + "(" + view.getSgbdDestination().getSelectedItem() + ")</html>");
@@ -573,16 +625,32 @@ public class SQLBuilderCtrl {
         viewDetail.getFieldKey().setSelectedItem(detail.getNameKeySource());
         viewDetail.getQueryCondition().setText(detail.getConditionSource() != null ? detail.getConditionSource() : "");
 
+        viewDetail.getFieldKeyDestination().setSelectedItem(detail.getNameKeyDestination());
+        viewDetail.getValueKeyDestination().setText(detail.getValueKeyDestination() != null ? detail.getValueKeyDestination() : "");
+
         viewDetail.setVisible(true);
 
         detail.setNameKeySource(viewDetail.getFieldKey().getSelectedIndex() >= 0 ? viewDetail.getFieldKey().getSelectedItem().toString() : "");
         detail.setConditionSource(viewDetail.getQueryCondition().getText());
+        detail.setNameKeyDestination(viewDetail.getFieldKeyDestination().getSelectedIndex() >= 0 ? viewDetail.getFieldKeyDestination().getSelectedItem().toString() : "");
+        detail.setValueKeyDestination(viewDetail.getValueKeyDestination().getText());
 
         detail.getFields().clear();
         for (int i = 0; i < viewDetail.getTableRelationship().getRowCount(); i++) {
-            Field field = new Field();
+
+            Field field = null;
+            Object obj = viewDetail.getTableRelationship().getValueAt(i, 2);
+
+            if (obj != null && (obj instanceof Field)) {
+                field = (Field) obj;
+            } else {
+                field = new Field();
+            }
+
             field.setNameFieldSource(viewDetail.getTableRelationship().getValueAt(i, 0).toString());
+            field.setTypeSource(fieldsSource.get(field.getNameFieldSource()));
             field.setNameFieldDestination(viewDetail.getTableRelationship().getValueAt(i, 1).toString());
+            field.setTypeDestination(fieldsDestination.get(field.getNameFieldDestination()));
             detail.getFields().add(field);
         }
         view.getTableRelationship().repaint();
@@ -605,9 +673,11 @@ public class SQLBuilderCtrl {
         configureListTransfer();
         configureListTransferDetail();
         configureTableRelationship();
-        daoSource = new SourceDao(new CriadorDeSessao().getSession());
-        daoAddress = new AddressSourceDao(new CriadorDeSessao().getSession());
-        entityDao = new EntityDao(new CriadorDeSessao().getSession());
+        Session sessao = new CriadorDeSessao().getSession();
+        daoSource = new SourceDao(sessao);
+        daoAddress = new AddressSourceDao(sessao);
+        entityDao = new EntityDao(sessao);
+        fieldDao = new FieldDao(sessao);
         view.getComboTask().setEnabled(false);
     }
 
@@ -638,8 +708,11 @@ public class SQLBuilderCtrl {
         ((DefaultTableModel) view.getTableRelationship().getModel()).setRowCount(0);
         for (Entity entity : entitys) {
             DetailsModel dm = new DetailsModel();
+            dm.setEntity(entity);
             dm.setNameKeySource(entity.getNameKeySource());
             dm.setConditionSource(entity.getConditionSource());
+            dm.setNameKeyDestination(entity.getNameKeyDestination());
+            dm.setValueKeyDestination(entity.getValueKeyDestination());
             dm.setFields(new ArrayList<>(entity.getField()));
             ((DefaultTableModel) view.getTableRelationship().getModel()).addRow(new Object[]{
                 entity.getEntitySource(),
@@ -654,7 +727,8 @@ public class SQLBuilderCtrl {
         for (Field field : fields) {
             ((DefaultTableModel) viewDetail.getTableRelationship().getModel()).addRow(new Object[]{
                 field.getNameFieldSource(),
-                field.getNameFieldDestination()
+                field.getNameFieldDestination(),
+                field
             });
         }
     }

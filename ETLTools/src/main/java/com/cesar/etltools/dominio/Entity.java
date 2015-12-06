@@ -25,13 +25,15 @@ public class Entity {
     private String nameKeySource;
     private String conditionSource;
     private String entityDestination;
+    private String nameKeyDestination;
+    private String valueKeyDestination;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
     private Source source;
 
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, orphanRemoval=true)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Collection<Field> field;
 
@@ -90,4 +92,23 @@ public class Entity {
     public void setField(Collection<Field> fields) {
         this.field = fields;
     }
+
+    public String getNameKeyDestination() {
+        return nameKeyDestination;
+    }
+
+    public void setNameKeyDestination(String nameKeyDestination) {
+        this.nameKeyDestination = nameKeyDestination;
+    }
+
+    public String getValueKeyDestination() {
+        return valueKeyDestination;
+    }
+
+    public void setValueKeyDestination(String valueKeyDestination) {
+        this.valueKeyDestination = valueKeyDestination;
+    }
+    
+    
+    
 }

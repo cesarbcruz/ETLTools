@@ -71,6 +71,14 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         return fieldKey;
     }
     
+    public JComboBox getFieldKeyDestination() {
+        return fieldKeyDestination;
+    }
+    
+    public JTextField getValueKeyDestination() {
+        return valueKeyDestination;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,6 +102,10 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         fieldKey = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        fieldKeyDestination = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        valueKeyDestination = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("language/Bundle_pt_BR"); // NOI18N
@@ -120,11 +132,11 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Origem", "Destino"
+                "Origem", "Destino", "Object"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -136,6 +148,10 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         if (tableRelationship.getColumnModel().getColumnCount() > 0) {
             tableRelationship.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("DetailRelationshipGUI.tableRelationship.columnModel.title0")); // NOI18N
             tableRelationship.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("DetailRelationshipGUI.tableRelationship.columnModel.title1")); // NOI18N
+            tableRelationship.getColumnModel().getColumn(2).setMinWidth(0);
+            tableRelationship.getColumnModel().getColumn(2).setPreferredWidth(0);
+            tableRelationship.getColumnModel().getColumn(2).setMaxWidth(0);
+            tableRelationship.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("DetailRelationshipGUI.tableRelationship.columnModel.title2")); // NOI18N
         }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -185,7 +201,7 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         queryCondition.setText(bundle.getString("DetailRelationshipGUI.queryCondition.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -196,7 +212,7 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         jLabel2.setText(bundle.getString("DetailRelationshipGUI.jLabel2.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -205,7 +221,7 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         fieldKey.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -215,11 +231,50 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
         jLabel1.setText(bundle.getString("DetailRelationshipGUI.jLabel1.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jLabel1, gridBagConstraints);
+
+        jLabel3.setText(bundle.getString("DetailRelationshipGUI.jLabel3.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(jLabel3, gridBagConstraints);
+
+        fieldKeyDestination.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(fieldKeyDestination, gridBagConstraints);
+
+        jLabel4.setText(bundle.getString("DetailRelationshipGUI.jLabel4.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(jLabel4, gridBagConstraints);
+
+        valueKeyDestination.setText(bundle.getString("DetailRelationshipGUI.valueKeyDestination.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(valueKeyDestination, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -278,8 +333,11 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton close;
     private javax.swing.JComboBox fieldKey;
+    private javax.swing.JComboBox fieldKeyDestination;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JList listFieldDestination;
     private javax.swing.JList listFieldSource;
@@ -289,5 +347,6 @@ public class DetailRelationshipGUI extends javax.swing.JDialog {
     private javax.swing.JScrollPane scrollTableRelationship;
     private javax.swing.JLabel status;
     private javax.swing.JTable tableRelationship;
+    private javax.swing.JTextField valueKeyDestination;
     // End of variables declaration//GEN-END:variables
 }

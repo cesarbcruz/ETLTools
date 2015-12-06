@@ -6,25 +6,33 @@
 package com.cesar.etltools.dominio;
 
 import com.cesar.etltools.dao.CriadorDeSessao;
+import com.cesar.etltools.dao.MigrationDataTableDao;
 import com.cesar.etltools.dao.SourceDao;
 import com.cesar.etltools.dao.jdbc.factory.Database;
 import com.cesar.etltools.dao.jdbc.factory.DatabaseFactory;
+import com.cesar.etltools.model.DataConverter;
 import com.cesar.etltools.model.ParamDatabase;
 import com.cesar.etltools.model.SGDB;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.hibernate.Session;
 
 /**
  *
  * @author cesar
  */
 public class MigrateData {
-
+    
     void execute(Task t) throws ClassNotFoundException, SQLException {
         if (t != null) {
-            SourceDao daoSource = new SourceDao(new CriadorDeSessao().getSession());
+            Session sessao = new CriadorDeSessao().getSession();
+            SourceDao daoSource = new SourceDao(sessao);
+            MigrationDataTableDao migrationDataTableDao = new MigrationDataTableDao(sessao);
             Source source = daoSource.byTask(t);
             if (source != null && source.getAddressSource() != null && source.getEntity() != null) {
                 for (AddressSource address : source.getAddressSource()) {
@@ -45,64 +53,110 @@ public class MigrateData {
                             map.put(entity.getEntitySource(), mdt);
                         }
                         if (entity.getField() != null) {
-                            String sqlInsert = "";
                             try {
-                                ResultSet rs = database.executeQuery(buildQuery(entity, mdt));
-                                sqlInsert = (buildInsert(entity, rs));
+                                ResultSet rs = database.executeQuery(buildQuery(entity, mdt, 0));
+                                int maxKey = 0;
+                                if (rs.next()) {
+                                    maxKey = rs.getInt(entity.getNameKeySource());
+                                }
+                                if (mdt.getLastKeyField() < maxKey) {
+                                    rs = database.executeQuery(buildQuery(entity, mdt, maxKey));
+                                    buildInsert(entity, rs, source.getDestination());
+                                    mdt.setLastKeyField(maxKey);
+                                    mdt.setDateTimeUpdate(new Timestamp(new Date().getTime()));
+                                    migrationDataTableDao.salvar(mdt);
+                                }
                             } finally {
                                 database.closeConnection();
-                            }                            
-                            database.executeSql(sqlInsert);
+                            }
                         }
                     }
                 }
-
+                
             }
         }
     }
-
-    private String buildQuery(Entity entity, MigrationDataTable migrationDataTable) {
+    
+    private String buildQuery(Entity entity, MigrationDataTable migrationDataTable, int maxKey) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT").append("\n");
-
-        Object[] fields = entity.getField().toArray();
-        for (int i = 0; i < fields.length; i++) {
-            sql.append(((Field) fields[i]).getNameFieldSource());
-            if (i < fields.length - 1) {
-                sql.append(",\n");
+        
+        if (maxKey == 0) {
+            sql.append(" MAX(").append(entity.getNameKeySource()).append(") as ").append(entity.getNameKeySource());
+        } else {
+            Object[] fields = entity.getField().toArray();
+            for (int i = 0; i < fields.length; i++) {
+                sql.append(((Field) fields[i]).getNameFieldSource());
+                if (i < fields.length - 1) {
+                    sql.append(",\n");
+                }
             }
         }
         sql.append("\nFROM ").append(entity.getEntitySource()).append("\n");
-        sql.append("WHERE ").append(entity.getNameKeySource()).append(" > ").append(migrationDataTable.getLastKeyField()).append("\n");
+        sql.append(" WHERE ").append(entity.getNameKeySource()).append(" > ").append(migrationDataTable.getLastKeyField()).append("\n");
+        if (maxKey > 0) {
+            sql.append(" AND ").append(entity.getNameKeySource()).append(" <= ").append(maxKey).append("\n");
+        }
         if (entity.getConditionSource() != null && !entity.getConditionSource().isEmpty()) {
             sql.append("AND ").append(entity.getConditionSource());
         }
         return sql.toString();
     }
-
-    private String buildInsert(Entity entity, ResultSet rs) throws SQLException {
+    
+    private void buildInsert(Entity entity, ResultSet rs, Destination destination) throws SQLException, ClassNotFoundException {
         StringBuilder sql = new StringBuilder();
-        while (rs.next()) {
-            sql.append("INSERT INTO ").append(entity.getEntityDestination()).append("(").append("\n");
-
-            Object[] fields = entity.getField().toArray();
-            for (int i = 0; i < fields.length; i++) {
-                sql.append(((Field) fields[i]).getNameFieldDestination());
-                if (i < fields.length - 1) {
-                    sql.append(",\n");
+        ParamDatabase param = new ParamDatabase(SGDB.byID(destination.getTipo()), destination.getIp(), destination.getPort(), destination.getUserName(), destination.getPassword(), destination.getDatabaseName());
+        Database database = DatabaseFactory.getDatabase(param);
+        try {
+            PreparedStatement pst = null;
+            while (rs.next()) {
+                Object[] fields = entity.getField().toArray();
+                if (pst == null) {
+                    sql.append("INSERT INTO ").append(entity.getEntityDestination()).append("(").append("\n");
+                    
+                    boolean keyDestination = entity.getNameKeyDestination()!=null && !entity.getNameKeyDestination().isEmpty()
+                            && entity.getValueKeyDestination()!=null && !entity.getValueKeyDestination().isEmpty();
+                    
+                    if(keyDestination){
+                        sql.append(entity.getNameKeyDestination()).append(",\n");
+                    }
+                    
+                    for (int i = 0; i < fields.length; i++) {
+                        sql.append(((Field) fields[i]).getNameFieldDestination());
+                        if (i < fields.length - 1) {
+                            sql.append(",\n");
+                        }
+                    }
+                    sql.append("\n").append(") VALUES (").append("\n");
+                    
+                    if(keyDestination){
+                        sql.append(entity.getValueKeyDestination()).append(",\n");
+                    }
+                    
+                    for (int i = 0; i < fields.length; i++) {
+                        sql.append("?");
+                        if (i < fields.length - 1) {
+                            sql.append(",\n");
+                        }
+                    }
+                    sql.append("\n").append(");").append("\n");
+                    pst = database.executeSql(sql.toString());
                 }
-            }
-            sql.append("\n").append(") VALUES (").append("\n");
-            for (int i = 0; i < fields.length; i++) {
-                sql.append(rs.getObject(((Field) fields[i]).getNameFieldSource()));
-                if (i < fields.length - 1) {
-                    sql.append(",\n");
+                
+                for (int i = 0; i < fields.length; i++) {
+                    pst.setObject(i + 1, DataConverter.execute(((Field) fields[i]).getTypeSource(), ((Field) fields[i]).getTypeDestination(), rs.getObject(i + 1)));
                 }
+                
+                System.out.println(pst.toString());
+                
+                pst.addBatch();
             }
-            sql.append("\n").append(");").append("\n");
+            if (pst != null) {
+                pst.executeBatch();
+            }
+            
+        } finally {
+            database.closeConnection();
         }
-
-        return sql.toString();
     }
-
 }

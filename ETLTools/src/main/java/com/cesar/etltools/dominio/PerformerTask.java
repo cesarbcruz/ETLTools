@@ -5,6 +5,8 @@
  */
 package com.cesar.etltools.dominio;
 
+import controller.Language;
+import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -29,8 +31,17 @@ public abstract class PerformerTask {
             @Override
             public void run() {
                 System.out.println("Execute Task: " + t.getDescription());
-                new MigrateData().execute(t);
-                taskEvent(t);
+                try {
+                    new MigrateData().execute(t);
+                    taskEvent(t, Language.getBundle().getString("MainGUI.messageRunTask.text"));
+                } catch (ClassNotFoundException ex) {
+                    taskEvent(t, ex.getMessage());
+                } catch (SQLException ex) {
+                    while (ex.getNextException() != null) {
+                        ex = ex.getNextException();
+                    }
+                    taskEvent(t, ex.getMessage());
+                }
             }
         };
 
@@ -44,5 +55,5 @@ public abstract class PerformerTask {
         }, 60 * 60, SECONDS);
     }
 
-    public abstract void taskEvent(Task t);
+    public abstract void taskEvent(Task t, String message);
 }

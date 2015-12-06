@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -40,13 +39,11 @@ public class MainCtrl {
 
     MainGUI view;
     private final Color defaultColorButto = new JButton().getBackground();
-    private final String fileLanguagePtBr = "Bundle_pt_BR";
-    private final String fileLanguageEnUs = "Bundle_en_US";
     private ResourceBundle bundle;
     private TaskDao taskDao;
 
     public MainCtrl() {
-        setup(fileLanguagePtBr);
+        setup(Language.fileLanguagePtBr);
     }
 
     private void addActionButtonCreateTask() {
@@ -107,7 +104,7 @@ public class MainCtrl {
         view.getButtonPtBr().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setup(fileLanguagePtBr);
+                setup(Language.fileLanguagePtBr);
             }
         });
     }
@@ -116,7 +113,7 @@ public class MainCtrl {
         view.getButtonEn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setup(fileLanguageEnUs);
+                setup(Language.fileLanguageEnUs);
             }
         });
     }
@@ -163,15 +160,16 @@ public class MainCtrl {
                 return;
             }
         }
-        bundle = java.util.ResourceBundle.getBundle("language/" + fileLanguage);
+        Language.setFileLanguage(fileLanguage);
+        bundle = Language.getBundle();
         view = new MainGUI(bundle);
         view.setTitle(view.getBundle().getString("MainGUI.title.text"));
         switch (fileLanguage) {
-            case fileLanguagePtBr:
+            case Language.fileLanguagePtBr:
                 view.getButtonPtBr().setBackground(Color.orange);
                 view.getButtonEn().setBackground(defaultColorButto);
                 break;
-            case fileLanguageEnUs:
+            case Language.fileLanguageEnUs:
                 view.getButtonEn().setBackground(Color.orange);
                 view.getButtonPtBr().setBackground(defaultColorButto);
                 break;
@@ -246,13 +244,13 @@ public class MainCtrl {
                 if (task.isActive()) {
                     new PerformerTask() {
                         @Override
-                        public void taskEvent(final Task t) {
+                        public void taskEvent(final Task t, final String message) {
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
                                     view.getLog().setText(view.getLog().getText()
                                             .concat(new Date().toString()).concat(" - ")
-                                            .concat(view.getBundle().getString("MainGUI.messageRunTask.text"))
+                                            .concat(message)
                                             .concat(": ").concat(t.getDescription()).concat("\n"));
 
                                 }
