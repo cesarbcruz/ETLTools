@@ -33,9 +33,10 @@ public class Entity {
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
     private Source source;
 
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, orphanRemoval=true)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Collection<Field> field;
+
 
     public int getId() {
         return id;

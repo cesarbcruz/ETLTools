@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
 
 @javax.persistence.Entity
@@ -28,7 +26,6 @@ public class Field {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "entityid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-    @Cascade(CascadeType.ALL)
     private Entity entity;
 
     public int getId() {
