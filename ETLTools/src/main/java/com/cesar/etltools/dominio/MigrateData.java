@@ -26,7 +26,7 @@ import org.hibernate.Session;
  *
  * @author cesar
  */
-public class MigrateData {
+public abstract class MigrateData {
     
     void execute(Task t) throws ClassNotFoundException, SQLException {
         if (t != null) {
@@ -36,24 +36,26 @@ public class MigrateData {
             Source source = daoSource.byTask(t);
             if (source != null && source.getAddressSource() != null && source.getEntity() != null) {
                 for (AddressSource address : source.getAddressSource()) {
-                    ParamDatabase param = new ParamDatabase(SGDB.byID(source.getTipo()), address.getIp(), source.getPort(), source.getUserName(), source.getPassword(), source.getDatabaseName());
-                    Database database = DatabaseFactory.getDatabase(param);
-                    Map<String, MigrationDataTable> map = new HashMap<>();
-                    for (MigrationDataTable mdt : address.getMigrationDataTables()) {
-                        map.put(mdt.getEntity().getEntitySource(), mdt);
-                    }
-                    for (Entity entity : source.getEntity()) {
-                        MigrationDataTable mdt = null;
-                        if (map.containsKey(entity.getEntitySource())) {
-                            mdt = map.get(entity.getEntitySource());
-                        } else {
-                            mdt = new MigrationDataTable();
-                            mdt.setAddressSource(address);
-                            mdt.setEntity(entity);
-                            map.put(entity.getEntitySource(), mdt);
+                    Database database = null;
+                    try {
+                        ParamDatabase param = new ParamDatabase(SGDB.byID(source.getTipo()), address.getIp(), source.getPort(), source.getUserName(), source.getPassword(), source.getDatabaseName());
+                        database = DatabaseFactory.getDatabase(param);
+                        Map<String, MigrationDataTable> map = new HashMap<>();
+                        for (MigrationDataTable mdt : address.getMigrationDataTables()) {
+                            map.put(mdt.getEntity().getEntitySource(), mdt);
                         }
-                        if (entity.getField() != null) {
-                            try {
+                        for (Entity entity : source.getEntity()) {
+                            MigrationDataTable mdt = null;
+                            if (map.containsKey(entity.getEntitySource())) {
+                                mdt = map.get(entity.getEntitySource());
+                            } else {
+                                mdt = new MigrationDataTable();
+                                mdt.setAddressSource(address);
+                                mdt.setEntity(entity);
+                                map.put(entity.getEntitySource(), mdt);
+                            }
+                            if (entity.getField() != null) {
+                                eventNotifcation("Importando "+entity.getEntitySource()+ " do IP: "+address.getIp());
                                 ResultSet rs = database.executeQuery(buildQuery(entity, mdt, 0));
                                 int maxKey = 0;
                                 if (rs.next()) {
@@ -66,9 +68,13 @@ public class MigrateData {
                                     mdt.setDateTimeUpdate(new Timestamp(new Date().getTime()));
                                     migrationDataTableDao.salvar(mdt);
                                 }
-                            } finally {
-                                database.closeConnection();
                             }
+                        }
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        eventNotifcation(ex.getMessage());
+                    } finally {
+                        if (database != null) {
+                            database.closeConnection();
                         }
                     }
                 }
@@ -76,6 +82,8 @@ public class MigrateData {
             }
         }
     }
+    
+    abstract void eventNotifcation(String s);
     
     private String buildQuery(Entity entity, MigrationDataTable migrationDataTable, int maxKey) {
         StringBuilder sql = new StringBuilder();
@@ -114,10 +122,10 @@ public class MigrateData {
                 if (pst == null) {
                     sql.append("INSERT INTO ").append(entity.getEntityDestination()).append("(").append("\n");
                     
-                    boolean keyDestination = entity.getNameKeyDestination()!=null && !entity.getNameKeyDestination().isEmpty()
-                            && entity.getValueKeyDestination()!=null && !entity.getValueKeyDestination().isEmpty();
+                    boolean keyDestination = entity.getNameKeyDestination() != null && !entity.getNameKeyDestination().isEmpty()
+                            && entity.getValueKeyDestination() != null && !entity.getValueKeyDestination().isEmpty();
                     
-                    if(keyDestination){
+                    if (keyDestination) {
                         sql.append(entity.getNameKeyDestination()).append(",\n");
                     }
                     
@@ -129,7 +137,7 @@ public class MigrateData {
                     }
                     sql.append("\n").append(") VALUES (").append("\n");
                     
-                    if(keyDestination){
+                    if (keyDestination) {
                         sql.append(entity.getValueKeyDestination()).append(",\n");
                     }
                     

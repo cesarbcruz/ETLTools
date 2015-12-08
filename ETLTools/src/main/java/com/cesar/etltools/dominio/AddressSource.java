@@ -6,6 +6,7 @@
 package com.cesar.etltools.dominio;
 
 import java.util.Collection;
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,13 +28,12 @@ public class AddressSource {
     private int id;
     private String ip;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
     private Source source;
     
-    @OneToMany(mappedBy = "addressSource", fetch = FetchType.LAZY)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "addressSource", fetch = FetchType.LAZY)
     private Collection<MigrationDataTable> migrationDataTables;
 
     public int getId() {

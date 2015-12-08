@@ -1,6 +1,7 @@
 package com.cesar.etltools.dao;
 
 import com.cesar.etltools.dominio.AddressSource;
+import com.cesar.etltools.dominio.MigrationDataTable;
 import com.cesar.etltools.dominio.Source;
 import org.hibernate.Session;
 

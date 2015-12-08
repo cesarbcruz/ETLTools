@@ -28,13 +28,12 @@ public class MigrationDataTable {
     private int lastKeyField;
     private Timestamp dateTimeUpdate;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Entity entity;    
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "addressSourceId", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private AddressSource addressSource;
 
     public int getId() {
