@@ -32,8 +32,13 @@ public abstract class PerformerTask {
             public void run() {
                 System.out.println("Execute Task: " + t.getDescription());
                 try {
-                    new MigrateData().execute(t);
-                    taskEvent(t, Language.getBundle().getString("MainGUI.messageRunTask.text"));
+                    new MigrateData() {
+                        @Override
+                        void eventNotifcation(String s) {
+                            taskEvent(t, s);
+                        }
+                    }.execute(t);
+
                 } catch (ClassNotFoundException ex) {
                     taskEvent(t, ex.getMessage());
                 } catch (SQLException ex) {

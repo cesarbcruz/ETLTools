@@ -199,8 +199,10 @@ public class SQLBuilderCtrl {
                 if (selectedValues != null && !selectedValues.isEmpty()) {
                     if (JOptionPane.showConfirmDialog(parentRootFrame, "Os dados de controle vinculados ao IP serão perdidos.\nConfirma a remoção dos itens selecionados?", "Confirmação", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
                         for (Object obj : selectedValues) {
-                            if (((AddressSource) obj).getId() > 0) {
-                                daoAddress.deletar(((AddressSource) obj));
+                            AddressSource addressSource = (AddressSource) obj;
+                            if (addressSource.getId() > 0) {
+                                source.getAddressSource().remove(addressSource);
+                                daoAddress.deletar(addressSource);
                             }
                             ((DefaultComboBoxModel) viewAddressSource.getListAddressSource().getModel()).removeElement(obj);
                         }
@@ -551,7 +553,7 @@ public class SQLBuilderCtrl {
             if (obj != null && (obj instanceof Field)) {
                 Field field = (Field) obj;
                 if (field.getId() > 0) {
-                    Entity entity = ((DetailsModel)view.getTableRelationship().getValueAt(view.getTableRelationship().getSelectedRow(), 2)).getEntity();
+                    Entity entity = ((DetailsModel) view.getTableRelationship().getValueAt(view.getTableRelationship().getSelectedRow(), 2)).getEntity();
                     entity.getField().remove(field);
                     fieldDao.deletar(field);
                     ((DefaultTableModel) t.getModel()).removeRow(row);
@@ -682,7 +684,7 @@ public class SQLBuilderCtrl {
     }
 
     private void fillDataSource(Source source) {
-        List<AddressSource> addressSources = daoAddress.bySource(source);
+        List<AddressSource> addressSources = (List<AddressSource>) source.getAddressSource();
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for (AddressSource addressSource : addressSources) {
             model.addElement(addressSource);

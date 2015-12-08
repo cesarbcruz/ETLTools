@@ -28,7 +28,7 @@ public class Entity {
     private String nameKeyDestination;
     private String valueKeyDestination;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
     private Source source;
