@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 
 /**
@@ -32,7 +31,7 @@ public class AddressSource {
     @JoinColumn(name = "sourceid", insertable = true, updatable = true)
     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
     private Source source;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "addressSource", fetch = FetchType.LAZY)
     private Collection<MigrationDataTable> migrationDataTables;
 
@@ -71,6 +70,15 @@ public class AddressSource {
     @Override
     public String toString() {
         return ip;
-    }   
+    }
+
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+
+        AddressSource addressSource = (AddressSource) o;
+        return this.getIp().equals(addressSource.getIp());
+    }
 
 }

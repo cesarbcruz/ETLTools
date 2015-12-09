@@ -170,7 +170,7 @@ public class SQLBuilderCtrl {
                 } else if (!validateIp(newIp)) {
                     JOptionPane.showMessageDialog(parentRootFrame, "O IP informado é inválido!");
                 } else if(validadeIpExists(newIp, viewAddressSource.getListAddressSource().getModel())) {
-                    JOptionPane.showMessageDialog(parentRootFrame, "O IP informado é inválido!");
+                    JOptionPane.showMessageDialog(parentRootFrame, "Este IP já foi informado!");
                 }else{
                     AddressSource addressSource = new AddressSource();
                     addressSource.setIp(newIp);
@@ -183,7 +183,7 @@ public class SQLBuilderCtrl {
             private boolean validadeIpExists(String newIp, ListModel model) {
                 AddressSource addressSource = new AddressSource();
                 addressSource.setIp(newIp);
-                return ((DefaultListModel)model).contains(addressSource);
+                return ((DefaultComboBoxModel)model).getIndexOf(addressSource)>=0;
             }
         });
     }
@@ -661,6 +661,7 @@ public class SQLBuilderCtrl {
             field.setTypeSource(fieldsSource.get(field.getNameFieldSource()));
             field.setNameFieldDestination(viewDetail.getTableRelationship().getValueAt(i, 1).toString());
             field.setTypeDestination(fieldsDestination.get(field.getNameFieldDestination()));
+            field.setEntity(detail.getEntity());
             detail.getFields().add(field);
         }
         view.getTableRelationship().repaint();
