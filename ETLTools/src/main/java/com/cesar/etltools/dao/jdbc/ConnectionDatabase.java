@@ -9,6 +9,7 @@ import com.cesar.etltools.model.ParamDatabase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  *
@@ -26,7 +27,11 @@ public class ConnectionDatabase {
     public Connection connect() throws ClassNotFoundException, SQLException {
         String url = paramDatabase.getSgdb().getUrl() + paramDatabase.getIpHost() + ":" + paramDatabase.getPort() + "/" + paramDatabase.getDatabase();
         Class.forName(paramDatabase.getSgdb().getDriver());
-        con = (Connection) DriverManager.getConnection(url, paramDatabase.getUser(), paramDatabase.getPassword());
+        Properties properties = new Properties();
+        properties.put("connectTimeout", "2000");
+        properties.put("user", paramDatabase.getUser());
+        properties.put("password", paramDatabase.getPassword());
+        con = (Connection) DriverManager.getConnection(url, properties);
         return con;
     }
 

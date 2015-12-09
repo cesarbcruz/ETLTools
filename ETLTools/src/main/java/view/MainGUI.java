@@ -22,7 +22,6 @@ public class MainGUI extends javax.swing.JFrame {
      * @param bundle
      */
     public MainGUI(ResourceBundle bundle) {
-        this.bundle = bundle;
         initComponents();
         setSize(800, 600);
         this.setLocationRelativeTo(null);
@@ -44,8 +43,7 @@ public class MainGUI extends javax.swing.JFrame {
         buttonCreateTask = new javax.swing.JButton();
         buttonSQLBuilder = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        buttonPtBr = new javax.swing.JButton();
-        buttonEn = new javax.swing.JButton();
+        buttonRun = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         list = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -68,33 +66,28 @@ public class MainGUI extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        buttonCreateTask.setText(bundle.getString("MainGUI.buttonCreateTask.text")); // NOI18N
+        buttonCreateTask.setText("Criar Tarefa");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonCreateTask, gridBagConstraints);
 
-
-        buttonSQLBuilder.setText(bundle.getString("MainGUI.buttonSQLBuilder.text")); // NOI18N
+        buttonSQLBuilder.setText("Configurar Tarefa");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(buttonSQLBuilder, gridBagConstraints);
 
-        buttonPtBr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/language/pt-br.png"))); // NOI18N
-        buttonPtBr.setText(bundle.getString("MainGUI.buttonPtBr.text")); // NOI18N
-        buttonPtBr.addActionListener(new java.awt.event.ActionListener() {
+        buttonRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/run.png"))); // NOI18N
+        buttonRun.setText("EXECUTAR TAREFAS");
+        buttonRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPtBrActionPerformed(evt);
+                buttonRunActionPerformed(evt);
             }
         });
-        jPanel3.add(buttonPtBr);
-
-        buttonEn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/language/en.png"))); // NOI18N
-        buttonEn.setText(bundle.getString("MainGUI.buttonEn.text")); // NOI18N
-        jPanel3.add(buttonEn);
+        jPanel3.add(buttonRun);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -112,7 +105,7 @@ public class MainGUI extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("MainGUI.jScrollPane2.border.title"))); // NOI18N
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("LOG"));
 
         log.setEditable(false);
         log.setColumns(20);
@@ -134,9 +127,9 @@ public class MainGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonPtBrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPtBrActionPerformed
+    private void buttonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRunActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPtBrActionPerformed
+    }//GEN-LAST:event_buttonRunActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,20 +174,12 @@ public class MainGUI extends javax.swing.JFrame {
         return buttonSQLBuilder;
     }
 
-    public JButton getButtonEn() {
-        return buttonEn;
-    }
-
-    public JButton getButtonPtBr() {
-        return buttonPtBr;
+    public JButton getButtonRun() {
+        return buttonRun;
     }
 
     public JDesktopPane getDesktopPane() {
         return desktopPane;
-    }
-
-    public ResourceBundle getBundle() {
-        return bundle;
     }
 
     public JList getList() {
@@ -207,8 +192,7 @@ public class MainGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCreateTask;
-    private javax.swing.JButton buttonEn;
-    private javax.swing.JButton buttonPtBr;
+    private javax.swing.JButton buttonRun;
     private javax.swing.JButton buttonSQLBuilder;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JPanel jPanel2;
@@ -218,6 +202,5 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JList list;
     private javax.swing.JTextArea log;
-    java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }

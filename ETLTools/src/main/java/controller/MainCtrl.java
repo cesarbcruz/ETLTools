@@ -15,15 +15,14 @@ import java.beans.PropertyVetoException;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ScheduledExecutorService;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import util.ExceptionHandler;
-import util.Messages;
 import view.MainGUI;
 
 /*
@@ -38,12 +37,14 @@ import view.MainGUI;
 public class MainCtrl {
 
     MainGUI view;
-    private final Color defaultColorButto = new JButton().getBackground();
+
     private ResourceBundle bundle;
     private TaskDao taskDao;
+    private List<Task> tasks;
+    private ScheduledExecutorService scheduleExecutor;
 
     public MainCtrl() {
-        setup(Language.fileLanguagePtBr);
+        setup();
     }
 
     private void addActionButtonCreateTask() {
@@ -100,20 +101,11 @@ public class MainCtrl {
 
     }
 
-    private void addActionButtonPtBr() {
-        view.getButtonPtBr().addActionListener(new ActionListener() {
+    private void addActionButtonRun() {
+        view.getButtonRun().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setup(Language.fileLanguagePtBr);
-            }
-        });
-    }
-
-    private void addActionButtonEnUS() {
-        view.getButtonEn().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setup(Language.fileLanguageEnUs);
+                runTask(tasks);
             }
         });
     }
@@ -144,46 +136,27 @@ public class MainCtrl {
         });
     }
 
-    private void setup(String fileLanguage) {
-        if (view != null) {
-
-            if (view.getBundle().getBaseBundleName().equals("language/" + fileLanguage)) {
-                return;
-            }
-
-            boolean confirm = Messages.confirm(view, view.getBundle().getString("MainGUI.messageConfirmRestart.text"),
-                    view.getBundle().getString("MainGUI.messageConfirmTitle.text"), view.getBundle().getString("MainGUI.messageConfirmOK.text"),
-                    view.getBundle().getString("MainGUI.messageConfirmCancel.text"));
-            if (confirm) {
-                view.dispose();
-            } else {
-                return;
-            }
+    private void setColorButtonRun(boolean run) {
+        if (run) {
+            view.getButtonRun().setBackground(new Color(51, 153, 255));
+            view.getButtonRun().setForeground(new java.awt.Color(255, 255, 255));
+        } else {
+            view.getButtonRun().setBackground(new Color(255, 99, 71));
+            view.getButtonRun().setForeground(new java.awt.Color(255, 255, 255));
         }
-        Language.setFileLanguage(fileLanguage);
-        bundle = Language.getBundle();
+    }
+
+    private void setup() {
         view = new MainGUI(bundle);
-        view.setTitle(view.getBundle().getString("MainGUI.title.text"));
-        switch (fileLanguage) {
-            case Language.fileLanguagePtBr:
-                view.getButtonPtBr().setBackground(Color.orange);
-                view.getButtonEn().setBackground(defaultColorButto);
-                break;
-            case Language.fileLanguageEnUs:
-                view.getButtonEn().setBackground(Color.orange);
-                view.getButtonPtBr().setBackground(defaultColorButto);
-                break;
-        }
-        addActionButtonPtBr();
-        addActionButtonEnUS();
+        setColorButtonRun(false);
+        addActionButtonRun();
         addActionButtonCreateTask();
         addActionButtonSQLBuilder();
         view.setVisible(true);
         taskDao = new TaskDao(new CriadorDeSessao().getSession());
         addActionList();
-        List<Task> tasks = taskDao.list();
+        tasks = taskDao.list();
         reloadList(tasks);
-        runTask(tasks);
     }
 
     public static void main(String[] args) {
@@ -240,23 +213,32 @@ public class MainCtrl {
 
     private void runTask(final List<Task> tasks) {
         if (tasks != null && !tasks.isEmpty()) {
-            for (final Task task : tasks) {
-                if (task.isActive()) {
-                    new PerformerTask() {
-                        @Override
-                        public void taskEvent(final Task t, final String message) {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view.getLog().setText(view.getLog().getText()
-                                            .concat(new Date().toString()).concat(" - ")
-                                            .concat(message)
-                                            .concat(": ").concat(t.getDescription()).concat("\n"));
 
-                                }
-                            });
-                        }
-                    }.execute(task);
+            if (scheduleExecutor != null) {
+                scheduleExecutor.shutdown();
+                scheduleExecutor = null;
+                setColorButtonRun(false);
+            } else {
+                for (final Task task : tasks) {
+                    if (task.isActive()) {
+                        scheduleExecutor = new PerformerTask() {
+                            @Override
+                            public void taskEvent(final Task t, final String message) {
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.getLog().setText(view.getLog().getText()
+                                                .concat(new Date().toString()).concat(" - ")
+                                                .concat(message)
+                                                .concat(": ").concat(t.getDescription()).concat("\n"));
+
+                                    }
+                                });
+                            }
+                        }.execute(task);
+
+                        setColorButtonRun(true);
+                    }
                 }
             }
         }

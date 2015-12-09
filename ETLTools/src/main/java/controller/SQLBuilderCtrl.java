@@ -37,10 +37,12 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import net.java.balloontip.BalloonTip;
@@ -165,17 +167,23 @@ public class SQLBuilderCtrl {
 
                 if (newIp == null || newIp.isEmpty()) {
                     JOptionPane.showMessageDialog(parentRootFrame, "O IP não foi informado!");
-                    viewAddressSource.getIpHostSource().grabFocus();
                 } else if (!validateIp(newIp)) {
                     JOptionPane.showMessageDialog(parentRootFrame, "O IP informado é inválido!");
-                    viewAddressSource.getIpHostSource().grabFocus();
-                } else {
+                } else if(validadeIpExists(newIp, viewAddressSource.getListAddressSource().getModel())) {
+                    JOptionPane.showMessageDialog(parentRootFrame, "O IP informado é inválido!");
+                }else{
                     AddressSource addressSource = new AddressSource();
                     addressSource.setIp(newIp);
                     ((DefaultComboBoxModel) viewAddressSource.getListAddressSource().getModel()).addElement(addressSource);
                     viewAddressSource.getIpHostSource().setText("");
-                    viewAddressSource.getIpHostSource().grabFocus();
                 }
+                viewAddressSource.getIpHostSource().grabFocus();
+            }
+
+            private boolean validadeIpExists(String newIp, ListModel model) {
+                AddressSource addressSource = new AddressSource();
+                addressSource.setIp(newIp);
+                return ((DefaultListModel)model).contains(addressSource);
             }
         });
     }

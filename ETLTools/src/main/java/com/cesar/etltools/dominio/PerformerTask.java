@@ -5,7 +5,6 @@
  */
 package com.cesar.etltools.dominio;
 
-import controller.Language;
 import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +24,7 @@ public abstract class PerformerTask {
     private final ScheduledExecutorService scheduler
             = Executors.newScheduledThreadPool(1);
 
-    public void execute(final Task t) {
+    public ScheduledExecutorService execute(final Task t) {
         final Runnable taskRun;
         taskRun = new Runnable() {
             @Override
@@ -58,6 +57,9 @@ public abstract class PerformerTask {
                 executeHandle.cancel(true);
             }
         }, 60 * 60, SECONDS);
+        
+        return scheduler;
+        
     }
 
     public abstract void taskEvent(Task t, String message);

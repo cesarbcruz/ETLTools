@@ -23,7 +23,6 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
      * Creates new form CreateTaskGUI
      */
     public CreateTaskGUI(ResourceBundle bundle) {
-        this.bundle = bundle;
         initComponents();
         buttonSave.setBackground(new Color(51, 153, 255));
         buttonSave.setForeground(new java.awt.Color(255, 255, 255));
@@ -60,7 +59,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         labelDescription.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        labelDescription.setText(bundle.getString("CreateTaskGUI.labelDescription.text")); // NOI18N
+        labelDescription.setText("Descrição");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -69,7 +68,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         getContentPane().add(labelDescription, gridBagConstraints);
 
         labelInitialDelay.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        labelInitialDelay.setText(bundle.getString("CreateTaskGUI.labelInitialDelay.text")); // NOI18N
+        labelInitialDelay.setText("Espera Inicial");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -78,7 +77,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         getContentPane().add(labelInitialDelay, gridBagConstraints);
 
         labelPeriod.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        labelPeriod.setText(bundle.getString("CreateTaskGUI.labelPeriod.text")); // NOI18N
+        labelPeriod.setText("Período");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -87,7 +86,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         getContentPane().add(labelPeriod, gridBagConstraints);
 
         jLabelUnit.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabelUnit.setText(bundle.getString("CreateTaskGUI.jLabelUnit.text")); // NOI18N
+        jLabelUnit.setText("Unidade Tempo");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -125,7 +124,6 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         getContentPane().add(period, gridBagConstraints);
 
         description.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        description.setText(bundle.getString("CreateTaskGUI.description.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -136,17 +134,17 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
 
         buttonSave.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBoxMenuItem.acceleratorForeground"));
         buttonSave.setForeground(new java.awt.Color(255, 255, 255));
-        buttonSave.setText(bundle.getString("CreateTaskGUI.buttonSave.text")); // NOI18N
+        buttonSave.setText("Salvar");
         jPanel1.add(buttonSave);
 
         buttonCancel.setBackground(javax.swing.UIManager.getDefaults().getColor("OptionPane.errorDialog.titlePane.shadow"));
         buttonCancel.setForeground(new java.awt.Color(255, 255, 255));
-        buttonCancel.setText(bundle.getString("CreateTaskGUI.buttonCancel.text")); // NOI18N
+        buttonCancel.setText("Cancelar");
         jPanel1.add(buttonCancel);
 
         buttonDelete.setBackground(javax.swing.UIManager.getDefaults().getColor("OptionPane.errorDialog.titlePane.shadow"));
         buttonDelete.setForeground(new java.awt.Color(255, 255, 255));
-        buttonDelete.setText(bundle.getString("CreateTaskGUI.buttonDelete.text")); // NOI18N
+        buttonDelete.setText("Excluir");
         jPanel1.add(buttonDelete);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -157,7 +155,7 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
 
         active.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         active.setSelected(true);
-        active.setText(bundle.getString("CreateTaskGUI.active.text")); // NOI18N
+        active.setText("Ativo");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -193,10 +191,6 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
         return unit;
     }
     
-    public ResourceBundle getBundle() {
-        return bundle;
-    }
-
     public JButton getButtonDelete() {
         return buttonDelete;
     }
@@ -219,6 +213,5 @@ public class CreateTaskGUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelPeriod;
     private javax.swing.JSpinner period;
     private javax.swing.JComboBox unit;
-    java.util.ResourceBundle bundle;
     // End of variables declaration//GEN-END:variables
 }

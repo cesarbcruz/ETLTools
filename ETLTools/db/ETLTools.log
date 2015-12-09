@@ -1,28 +1,53 @@
-<<<<<<< HEAD
-/*C2*/SET SCHEMA PUBLIC
+/*C3*/SET SCHEMA PUBLIC
 DELETE FROM TASK WHERE ID=1
-INSERT INTO TASK VALUES(1,TRUE,'subir vendas',3,60,'SECONDS')
-COMMIT
-DELETE FROM TASK WHERE ID=1
-INSERT INTO TASK VALUES(1,TRUE,'subir vendas2',3,60,'SECONDS')
+INSERT INTO TASK VALUES(1,TRUE,'subir vendas',1,60,'MINUTES')
 COMMIT
 DELETE FROM TASK WHERE ID=1
-INSERT INTO TASK VALUES(1,TRUE,'subir vendas2',3,60,'MINUTES')
+INSERT INTO TASK VALUES(1,TRUE,'subir vendas',1,1,'SECONDS')
 COMMIT
-INSERT INTO TASK VALUES(2,TRUE,'tarefa teste',1,1,'SECONDS')
-=======
-/*C4*/SET SCHEMA PUBLIC
-DELETE FROM MIGRATIONDATATABLE WHERE ID=3
-DELETE FROM ADDRESSSOURCE WHERE ID=4
-COMMIT
-DELETE FROM MIGRATIONDATATABLE WHERE ID=2
-DELETE FROM ADDRESSSOURCE WHERE ID=3
-COMMIT
-DELETE FROM ADDRESSSOURCE WHERE ID=2
-COMMIT
-DELETE FROM MIGRATIONDATATABLE WHERE ID=1
-DELETE FROM ADDRESSSOURCE WHERE ID=1
-COMMIT
-INSERT INTO ADDRESSSOURCE VALUES(7,'192.168.0.51',1)
->>>>>>> 57a1d83807ac71a97eab5c059e9f902eb6c558d5
+/*C68*/SET SCHEMA PUBLIC
+INSERT INTO ENTITY VALUES(10,'','public.t_vendadetalhe','T_VendaDetalhe','',1,'','')
+INSERT INTO FIELD VALUES(162,'id','ID',4,4,NULL)
+INSERT INTO FIELD VALUES(163,'aliqicms','aliqicms',8,8,NULL)
+INSERT INTO FIELD VALUES(164,'cpfsociotorcedor','CPFSocioTorcedor',1,1,NULL)
+INSERT INTO FIELD VALUES(165,'aliquotacofins','aliquotacofins',8,8,NULL)
+INSERT INTO FIELD VALUES(166,'aliquotapis','aliquotapis',8,8,NULL)
+INSERT INTO FIELD VALUES(167,'basecalculocofins','basecalculocofins',8,8,NULL)
+INSERT INTO FIELD VALUES(168,'basecalculoicms','basecalculoicms',8,8,NULL)
+INSERT INTO FIELD VALUES(169,'basecalculopis','basecalculopis',8,8,NULL)
+INSERT INTO FIELD VALUES(170,'cancelaitem','cancelaItem',1,1,NULL)
+INSERT INTO FIELD VALUES(171,'cod_venda','cod_venda',4,4,NULL)
+INSERT INTO FIELD VALUES(172,'codbar','codbar',1,12,NULL)
+INSERT INTO FIELD VALUES(173,'credgas','credgas',1,1,NULL)
+INSERT INTO FIELD VALUES(174,'data_baixa_credgas','data_baixa_credgas',12,12,NULL)
+INSERT INTO FIELD VALUES(175,'datafiscal','datafiscal',12,91,NULL)
+INSERT INTO FIELD VALUES(176,'datahora','datahora',93,93,NULL)
+INSERT INTO FIELD VALUES(177,'datahoravenda','datahoravenda',12,12,NULL)
+INSERT INTO FIELD VALUES(178,'descontosociotorcedorconcedido','descontoSocioTorcedorConcedido',8,8,NULL)
+INSERT INTO FIELD VALUES(179,'descontosociotorcedorenviado','descontoSocioTorcedorEnviado',8,8,NULL)
+INSERT INTO FIELD VALUES(180,'estorno','estorno',1,1,NULL)
+INSERT INTO FIELD VALUES(181,'hora_baixa_credgas','hora_baixa_credgas',12,12,NULL)
+INSERT INTO FIELD VALUES(182,'idcfop','idcfop',4,4,NULL)
+INSERT INTO FIELD VALUES(183,'idgruposubcodigoproduto','idgruposubcodigoproduto',4,4,NULL)
+INSERT INTO FIELD VALUES(184,'idpromocao','idpromocao',4,4,NULL)
+INSERT INTO FIELD VALUES(185,'idsituacaotributaria','idsituacaotributaria',4,4,NULL)
+INSERT INTO FIELD VALUES(186,'idsituacaotributariapiscofins','idsituacaotributariapiscofins',4,4,NULL)
+INSERT INTO FIELD VALUES(187,'motivo_canc','motivo_canc',4,4,NULL)
+INSERT INTO FIELD VALUES(188,'nestab','nEstab',4,4,NULL)
+INSERT INTO FIELD VALUES(189,'npdv','nPDV',1,1,NULL)
+INSERT INTO FIELD VALUES(190,'ordem_canc','ordem_canc',4,4,NULL)
+INSERT INTO FIELD VALUES(191,'ordem_venda','ordem_venda',4,4,NULL)
+INSERT INTO FIELD VALUES(192,'precounitario','precoUnitario',8,8,NULL)
+INSERT INTO FIELD VALUES(193,'qtde','qtde',8,8,NULL)
+INSERT INTO FIELD VALUES(194,'quantidadedesconto','quantidadedesconto',8,8,NULL)
+INSERT INTO FIELD VALUES(195,'subtotal_item','subtotal_item',8,8,NULL)
+INSERT INTO FIELD VALUES(196,'tributacao','tributacao',12,1,NULL)
+INSERT INTO FIELD VALUES(197,'unidade','unidade',12,12,NULL)
+INSERT INTO FIELD VALUES(198,'usuario_baixa_credgas','usuario_baixa_credgas',4,4,NULL)
+INSERT INTO FIELD VALUES(199,'usuario_canc','usuario_canc',4,4,NULL)
+INSERT INTO FIELD VALUES(200,'usuariocanc_original','usuariocanc_original',4,4,NULL)
+INSERT INTO FIELD VALUES(201,'valorcofins','valorcofins',8,8,NULL)
+INSERT INTO FIELD VALUES(202,'valordesconto','valordesconto',8,8,NULL)
+INSERT INTO FIELD VALUES(203,'valoricms','valoricms',8,8,NULL)
+INSERT INTO FIELD VALUES(204,'valorpis','valorpis',8,8,NULL)
 COMMIT

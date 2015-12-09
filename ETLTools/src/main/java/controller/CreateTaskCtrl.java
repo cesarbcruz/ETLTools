@@ -69,9 +69,7 @@ public abstract class CreateTaskCtrl {
         view.getButtonDelete().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean confirm = Messages.confirm(view, view.getBundle().getString("CreateTaskGUI.messageConfirmDelete.text"),
-                        view.getBundle().getString("MainGUI.messageConfirmTitle.text"), view.getBundle().getString("MainGUI.messageConfirmOK.text"),
-                        view.getBundle().getString("MainGUI.messageConfirmCancel.text"));
+                boolean confirm = Messages.confirm(view, "Deseja realmente excluir essa tarefa?", "Confirmação", "Sim", "Não");
                 if (confirm) {
                     dao.deletar(task);
                     view.dispose();
@@ -96,7 +94,7 @@ public abstract class CreateTaskCtrl {
                 try {
                     validate(task);
                     dao.salvar(task);
-                    Messages.information(view, view.getBundle().getString("MainGUI.messageInformationMessage.text"), view.getBundle().getString("MainGUI.messageInformationTitle.text"));
+                    Messages.information(view, "Tarefa salva com sucesso", "Aviso");
                     view.dispose();
                     event(dao.list());
                 } catch (Exception ex) {
@@ -109,11 +107,11 @@ public abstract class CreateTaskCtrl {
     private void validate(Task task) throws Exception {
         StringBuilder error = new StringBuilder();
         if (task.getDescription() == null || task.getDescription().trim().isEmpty()) {
-            error.append(view.getBundle().getString("CreateTaskGUI.messageErrordescription.text"));
+            error.append("Descrição não informada");
         }
 
         if (task.getInitialDelay() <= 0) {
-            error.append("\n").append(view.getBundle().getString("CreateTaskGUI.messageErrorInitialDelay.text"));
+            error.append("Tempo inicial inválido");
         }
 
         if (!error.toString().isEmpty()) {
@@ -154,10 +152,10 @@ public abstract class CreateTaskCtrl {
 
     private void createComboUnit() {
         view.getUnit().setModel(new DefaultComboBoxModel(new String[]{
-            view.getBundle().getString("CreateTaskGUI.unitOption1.text"),
-            view.getBundle().getString("CreateTaskGUI.unitOption2.text"),
-            view.getBundle().getString("CreateTaskGUI.unitOption3.text"),
-            view.getBundle().getString("CreateTaskGUI.unitOption4.text")
+            "SEGUNDOS",
+            "MINUTOS",
+            "HORAS",
+            "DIAS"
         }));
     }
 
